@@ -347,9 +347,8 @@ body{
 <script>
   // ⚠️ 替换成你自己的 Bin ID 和 API Key
   const BIN_ID = '6a2a15f7da38895dfeaa9630';
-  const API_KEY = '
-$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
-  const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
+  const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
+  const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
 
   async function loadCloudConfig() {
     try {

@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>挂逼日记</title>
+<title>Yukecil的挂逼日记</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --glass-bg: rgba(255,255,255,0.08);
-  --glass-bg-strong: rgba(255,255,255,0.12);
   --glass-border: rgba(255,255,255,0.2);
   --pink:#f4a0c8;
   --purple:#a78bfa;
@@ -56,20 +55,15 @@ body{
   padding:28px 36px 40px;
   display:flex;flex-direction:column;gap:22px;
 }
-/* 毛玻璃核心样式 */
+/* 毛玻璃效果，模糊度已改为 4px */
 .glass{
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border:1px solid var(--glass-border);
   border-radius:20px;
   box-shadow:0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
   width:100%;max-width:100%;
-}
-.glass-strong{
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 }
 .topnav{display:flex;align-items:center;justify-content:center;padding:20px 24px;}
 .logo{
@@ -156,7 +150,7 @@ body{
   50%{transform:translateY(-60px) rotate(180deg)}
 }
 
-/* 账本只读模块 */
+/* 账本模块 */
 .right-layout-wrapper { display: flex; flex-direction: column; gap: 18px; }
 .total-profit-box { text-align: center; padding: 18px; background: rgba(255, 255, 255, 0.03); }
 .total-title { font-size: 14px; color: var(--muted); letter-spacing: 1px; margin-bottom: 6px; }
@@ -283,6 +277,10 @@ body{
           <div class="glass board-card">
             <div class="board-header">
               <span class="board-title">买球 / PG</span>
+              <div class="board-stats">
+                <span class="stat-item lose">输<span class="stat-val" id="combinedLose">0</span></span>
+                <span class="stat-item win">赢<span class="stat-val" id="combinedWin">0</span></span>
+              </div>
             </div>
             <div class="record-list" id="pgRecords">
               <div class="no-record">暂无历史记录</div>
@@ -304,6 +302,12 @@ body{
   function updateLedgerDOM() {
     document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
     document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
+
+    // 合并PG和买球的输赢
+    const combinedLose = ledgerData.pg.lose + ledgerData.buyball.lose;
+    const combinedWin = ledgerData.pg.win + ledgerData.buyball.win;
+    document.getElementById('combinedLose').textContent = combinedLose;
+    document.getElementById('combinedWin').textContent = combinedWin;
 
     const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
     const netPg = ledgerData.pg.win - ledgerData.pg.lose;

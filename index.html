@@ -260,6 +260,7 @@ body{
           <div class="total-value" id="grandTotal">0</div>
         </div>
         <div class="boards-container" style="margin-top: 16px;">
+          <!-- 六合彩 -->
           <div class="glass board-card">
             <div class="board-header">
               <span class="board-title">六合彩</span>
@@ -273,13 +274,10 @@ body{
             </div>
           </div>
 
+          <!-- 买球 / PG（已移除单独统计数字，仅展示历史明细） -->
           <div class="glass board-card">
             <div class="board-header">
               <span class="board-title">买球 / PG</span>
-              <div class="board-stats">
-                <span class="stat-item lose">PG 输<span class="stat-val" id="pgLose">0</span> / 赢<span class="stat-val" id="pgWin">0</span></span>
-                <span class="stat-item lose">买球 输<span class="stat-val" id="buyballLose">0</span> / 赢<span class="stat-val" id="buyballWin">0</span></span>
-              </div>
             </div>
             <div class="record-list" id="pgRecords">
               <div class="no-record">暂无历史记录</div>
@@ -301,10 +299,7 @@ body{
   function updateLedgerDOM() {
     document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
     document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
-    document.getElementById('pgLose').textContent = ledgerData.pg.lose;
-    document.getElementById('pgWin').textContent = ledgerData.pg.win;
-    document.getElementById('buyballLose').textContent = ledgerData.buyball.lose;
-    document.getElementById('buyballWin').textContent = ledgerData.buyball.win;
+    // 买球/PG 不再更新单独的输赢数字
 
     const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
     const netPg = ledgerData.pg.win - ledgerData.pg.lose;
@@ -325,6 +320,7 @@ body{
 
     renderHistory('lhc', 'lhcRecords');
 
+    // 合并 PG 和买球历史
     const pgContainer = document.getElementById('pgRecords');
     const combined = [
       ...ledgerData.pg.history.map(item => ({ ...item, type: 'PG' })),

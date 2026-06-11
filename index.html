@@ -3,14 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Yukecil · 挂逼日记</title>
+<title>挂逼日记</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --glass-bg:rgba(255,255,255,0.12);
-  --glass-border:rgba(255,255,255,0.25);
+  --glass-bg: rgba(255,255,255,0.08);
+  --glass-bg-strong: rgba(255,255,255,0.12);
+  --glass-border: rgba(255,255,255,0.2);
   --pink:#f4a0c8;
   --purple:#a78bfa;
   --blue:#60a5fa;
@@ -55,14 +56,20 @@ body{
   padding:28px 36px 40px;
   display:flex;flex-direction:column;gap:22px;
 }
+/* 毛玻璃核心样式 */
 .glass{
-  background:transparent;
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border:1px solid var(--glass-border);
   border-radius:20px;
   box-shadow:0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
   width:100%;max-width:100%;
+}
+.glass-strong{
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 .topnav{display:flex;align-items:center;justify-content:center;padding:20px 24px;}
 .logo{
@@ -260,7 +267,6 @@ body{
           <div class="total-value" id="grandTotal">0</div>
         </div>
         <div class="boards-container" style="margin-top: 16px;">
-          <!-- 六合彩 -->
           <div class="glass board-card">
             <div class="board-header">
               <span class="board-title">六合彩</span>
@@ -274,7 +280,6 @@ body{
             </div>
           </div>
 
-          <!-- 买球 / PG（已移除单独统计数字，仅展示历史明细） -->
           <div class="glass board-card">
             <div class="board-header">
               <span class="board-title">买球 / PG</span>
@@ -299,7 +304,6 @@ body{
   function updateLedgerDOM() {
     document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
     document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
-    // 买球/PG 不再更新单独的输赢数字
 
     const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
     const netPg = ledgerData.pg.win - ledgerData.pg.lose;
@@ -320,7 +324,6 @@ body{
 
     renderHistory('lhc', 'lhcRecords');
 
-    // 合并 PG 和买球历史
     const pgContainer = document.getElementById('pgRecords');
     const combined = [
       ...ledgerData.pg.history.map(item => ({ ...item, type: 'PG' })),

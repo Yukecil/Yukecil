@@ -343,10 +343,10 @@ body{
   applySettings();
 </script>
 
-<!-- CloudBase 云端同步 -->
+<!-- CloudBase 读取配置 -->
 <script src="https://imgcache.qq.com/qcloud/tcbjs/1.10.8/tcb.js"></script>
 <script>
-  tcb.init({ env: 'yukecil-d1gzo460b1d4edf8d' });  // 换成你自己的环境ID
+  tcb.init({ env: 'yukecil-d1gzo460b1d4edf8d' });
   const db = tcb.database();
 
   async function loadCloudConfig() {

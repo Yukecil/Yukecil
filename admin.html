@@ -45,10 +45,11 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
 </style>
 </head>
 <body>
+
 <div class="comic-admin">
   <div class="head">
     ⚙️ 控制面板
-    <a href="https://Yukecil.github.io/yukecil/" class="head-close">返回主页</a>
+    <a href="https://yukecil.github.io/Yukecil/" class="head-close">返回主页</a>
   </div>
   <div class="tabs">
     <div class="tab active">资料编辑</div>
@@ -57,11 +58,11 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
   </div>
   <div class="content">
     <div class="panel active">
-      <div class="status" id="syncStatus">正在连接...</div>
+      <div class="status" id="syncStatus">⏳ 正在登录...</div>
       <div class="card"><label>昵称</label><input id="adminName" value="Yukecil"></div>
       <div class="card"><label>邮箱</label><input id="adminEmail" value="hello@example.com"></div>
       <div class="card"><label>Telegram（不含@）</label><input id="adminTelegram" value="@yourname"></div>
-      <div class="btns"><button class="btn" onclick="saveAllToCloud()">💾 保存并同步到云端</button></div>
+      <div class="btns"><button class="btn" id="saveBtn" disabled>💾 登录中...</button></div>
     </div>
     <div class="panel">
       <div class="card"><label>头像地址</label><input id="adminAvatar" placeholder="https://..."></div>
@@ -80,14 +81,16 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
   </div>
 </div>
 
+<!-- 标签页与开关交互 -->
 <script>
-  // 标签页切换
-  document.querySelectorAll('.tab').forEach((t,i) => {
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach((t, i) => {
     t.addEventListener('click', () => {
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      tabs.forEach(tab => tab.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
       t.classList.add('active');
-      document.querySelectorAll('.panel')[i].classList.add('active');
+      panels[i].classList.add('active');
     });
   });
   ['toggleHitokoto','toggleParticles','toggleStars'].forEach(id => {
@@ -95,16 +98,30 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
   });
 </script>
 
-<!-- CloudBase 读写 -->
+<!-- CloudBase SDK -->
 <script src="https://imgcache.qq.com/qcloud/tcbjs/1.10.8/tcb.js"></script>
 <script>
-  tcb.init({ env: 'yukecil-d1gzo460b1d4edf8d' }); // 换成你自己的环境ID
+  // 初始化
+  tcb.init({ env: 'yukecil-d1gzo460b1d4edf8d' }); // 确保这是你的环境ID
   const db = tcb.database();
 
+  const statusEl = document.getElementById('syncStatus');
+  const saveBtn = document.getElementById('saveBtn');
+
   // 匿名登录
-  tcb.auth({ persistence: 'local' }).anonymousAuthProvider().signIn()
-    .then(() => console.log('✅ 匿名登录成功'))
-    .catch(e => document.getElementById('syncStatus').textContent = '❌ 登录失败，请刷新重试');
+  async function initAuth() {
+    try {
+      await tcb.auth({ persistence: 'local' }).anonymousAuthProvider().signIn();
+      statusEl.textContent = '✅ 登录成功，可以修改配置';
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 保存并同步到云端';
+      // 登录成功后加载云端数据
+      loadFromCloud();
+    } catch (e) {
+      statusEl.textContent = '❌ 登录失败，请刷新重试';
+      console.error('登录错误:', e);
+    }
+  }
 
   // 加载云端配置
   async function loadFromCloud() {
@@ -121,39 +138,49 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
         document.getElementById('toggleHitokoto').classList.toggle('active', data.hitokotoEnabled !== false);
         document.getElementById('toggleParticles').classList.toggle('active', data.particlesEnabled !== false);
         document.getElementById('toggleStars').classList.toggle('active', data.starsEnabled !== false);
-        document.getElementById('syncStatus').textContent = '✅ 已加载云端配置';
+        statusEl.textContent = '✅ 已加载云端配置';
       } else {
-        document.getElementById('syncStatus').textContent = '⚠️ 云端暂无数据，请保存一次';
+        statusEl.textContent = '⚠️ 云端暂无数据，请保存一次';
       }
     } catch (e) {
-      document.getElementById('syncStatus').textContent = '❌ 加载失败，请检查网络';
+      statusEl.textContent = '❌ 加载失败，请检查网络';
+      console.error('加载错误:', e);
     }
   }
 
   // 保存到云端
   async function saveAllToCloud() {
-    const statusEl = document.getElementById('syncStatus');
+    if (!statusEl.textContent.includes('登录成功') && !statusEl.textContent.includes('已加载')) {
+      statusEl.textContent = '❌ 尚未登录，请刷新页面';
+      return;
+    }
     statusEl.textContent = '⏳ 正在保存...';
+    const data = {
+      title: document.getElementById('adminName').value.trim(),
+      email: document.getElementById('adminEmail').value.trim(),
+      telegram: document.getElementById('adminTelegram').value.trim(),
+      avatar: document.getElementById('adminAvatar').value.trim(),
+      bgMobile: document.getElementById('adminBgMobile').value.trim(),
+      bgDesktop: document.getElementById('adminBgDesktop').value.trim(),
+      hitokotoEnabled: document.getElementById('toggleHitokoto').classList.contains('active'),
+      particlesEnabled: document.getElementById('toggleParticles').classList.contains('active'),
+      starsEnabled: document.getElementById('toggleStars').classList.contains('active')
+    };
+
     try {
-      await db.collection('config').doc('site').set({
-        title: document.getElementById('adminName').value.trim(),
-        email: document.getElementById('adminEmail').value.trim(),
-        telegram: document.getElementById('adminTelegram').value.trim(),
-        avatar: document.getElementById('adminAvatar').value.trim(),
-        bgMobile: document.getElementById('adminBgMobile').value.trim(),
-        bgDesktop: document.getElementById('adminBgDesktop').value.trim(),
-        hitokotoEnabled: document.getElementById('toggleHitokoto').classList.contains('active'),
-        particlesEnabled: document.getElementById('toggleParticles').classList.contains('active'),
-        starsEnabled: document.getElementById('toggleStars').classList.contains('active')
-      });
+      await db.collection('config').doc('site').set(data);
       statusEl.textContent = '✅ 已保存到云端，主页将即时更新';
     } catch (e) {
-      statusEl.textContent = '❌ 保存失败，请重试';
-      console.error(e);
+      statusEl.textContent = '❌ 保存失败：' + (e.message || '未知错误');
+      console.error('保存错误:', e);
     }
   }
 
-  loadFromCloud();
+  // 暴露保存函数给按钮
+  window.saveAllToCloud = saveAllToCloud;
+
+  // 启动登录
+  initAuth();
 </script>
 </body>
 </html>

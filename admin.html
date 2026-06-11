@@ -96,8 +96,11 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
     document.getElementById(id).addEventListener('click', function(){ this.classList.toggle('active'); });
   });
 
-  // ✅ 已填入你的云函数 URL
-  const CLOUD_FUNC_URL = 'https://yukecil-d1gzo460b1d4edf8d-1440664152.ap-shanghai.app.tcloudbase.com/saveConfig';
+  // ⚠️ 替换成你自己的 Bin ID 和 API Key
+  const BIN_ID = '6a2a15f7da38895dfeaa9630';
+  const API_KEY = '
+$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
+  const BIN_UPDATE_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
   async function saveAllToCloud() {
     const statusEl = document.getElementById('syncStatus');
@@ -115,16 +118,19 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
     };
 
     try {
-      const res = await fetch(CLOUD_FUNC_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data })
+      const res = await fetch(BIN_UPDATE_URL, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Master-Key': API_KEY
+        },
+        body: JSON.stringify(data)
       });
       const result = await res.json();
-      if (result.success) {
+      if (result.record) {
         statusEl.textContent = '✅ 已保存到云端，主页将即时更新';
       } else {
-        statusEl.textContent = '❌ 保存失败：' + result.error;
+        statusEl.textContent = '❌ 保存失败：' + (result.message || '未知错误');
       }
     } catch (e) {
       statusEl.textContent = '❌ 保存失败，请检查网络';

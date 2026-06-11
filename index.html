@@ -343,17 +343,21 @@ body{
   applySettings();
 </script>
 
-<!-- CloudBase 读取配置 -->
-<script src="https://imgcache.qq.com/qcloud/tcbjs/1.10.8/tcb.js"></script>
+<!-- JSONBin 读取配置 -->
 <script>
-  tcb.init({ env: 'yukecil-d1gzo460b1d4edf8d' });
-  const db = tcb.database();
+  // ⚠️ 替换成你自己的 Bin ID 和 API Key
+  const BIN_ID = '6a2a15f7da38895dfeaa9630';
+  const API_KEY = '
+$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
+  const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest`;
 
   async function loadCloudConfig() {
     try {
-      const res = await db.collection('config').doc('site').get();
-      if (!res.data || res.data.length === 0) return;
-      const data = res.data[0];
+      const res = await fetch(BIN_URL, {
+        headers: { 'X-Master-Key': API_KEY }
+      });
+      const json = await res.json();
+      const data = json.record;
 
       if (data.title !== undefined) localStorage.setItem('userName', data.title);
       if (data.email !== undefined) localStorage.setItem('userEmail', data.email);

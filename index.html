@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Yukecil · 挂逼日记</title>
+<title>Yukecil</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -157,9 +157,30 @@ body{
 .total-value.minus { color: var(--red); text-shadow: 0 0 15px rgba(248,113,113,0.4); }
 .boards-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
 .board-card { padding: 20px; background: rgba(255, 255, 255, 0.02); }
-.board-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
-.board-title { font-size: 16px; font-weight: 600; background: linear-gradient(90deg, #fff, var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.board-stats { display: flex; gap: 12px; font-size: 13px; }
+.board-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+.board-title {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #fff, var(--muted));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+.board-stats {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 14px;
+  font-weight: 500;
+}
 .stat-item { display: flex; align-items: center; gap: 4px; }
 .stat-item.win { color: var(--green); }
 .stat-item.lose { color: var(--red); }
@@ -187,7 +208,8 @@ body{
   .quick-label{font-size:10px;}
   .boards-container{grid-template-columns: repeat(3, 1fr); gap: 8px;}
   .board-card{padding:14px;}
-  .board-title{font-size:14px;}
+  .board-title{font-size:16px;}
+  .board-stats{font-size:12px; gap:12px;}
 }
 @media (max-width:480px){
   .page{padding:8px 6px 20px;gap:10px;}
@@ -199,8 +221,8 @@ body{
   .quick-icon{font-size:20px;}
   .boards-container{grid-template-columns:1fr 1fr 1fr; gap:4px;}
   .board-card{padding:10px;}
-  .board-title{font-size:12px;}
-  .board-stats{font-size:11px; gap:6px;}
+  .board-title{font-size:14px;}
+  .board-stats{font-size:11px; gap:8px;}
 }
 </style>
 </head>
@@ -262,7 +284,7 @@ body{
           <div class="total-value" id="grandTotal">0</div>
         </div>
         <div class="boards-container" style="margin-top: 16px;">
-          <!-- 买码（原六合彩） -->
+          <!-- 买码 -->
           <div class="glass board-card">
             <div class="board-header">
               <span class="board-title">买码</span>
@@ -317,17 +339,13 @@ body{
   };
 
   function updateLedgerDOM() {
-    // 买码
     document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
     document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
-    // 买球
     document.getElementById('buyballLose').textContent = ledgerData.buyball.lose;
     document.getElementById('buyballWin').textContent = ledgerData.buyball.win;
-    // PG
     document.getElementById('pgLose').textContent = ledgerData.pg.lose;
     document.getElementById('pgWin').textContent = ledgerData.pg.win;
 
-    // 总账单
     const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
     const netBuyball = ledgerData.buyball.win - ledgerData.buyball.lose;
     const netPg = ledgerData.pg.win - ledgerData.pg.lose;

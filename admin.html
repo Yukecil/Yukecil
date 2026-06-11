@@ -61,7 +61,7 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
       <div class="card"><label>昵称</label><input id="adminName" value="Yukecil"></div>
       <div class="card"><label>邮箱</label><input id="adminEmail" value="hello@example.com"></div>
       <div class="card"><label>Telegram（不含@）</label><input id="adminTelegram" value="@yourname"></div>
-      <div class="btns"><button class="btn" onclick="saveAllToCloud()">💾 保存并同步到云端</button></div>
+      <div class="btns"><button class="btn" id="saveBtn" onclick="saveAllToCloud()">💾 保存并同步到云端</button></div>
     </div>
     <div class="panel">
       <div class="card"><label>头像地址</label><input id="adminAvatar" placeholder="https://..."></div>
@@ -80,8 +80,8 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
   </div>
 </div>
 
-<!-- 标签页与开关 -->
 <script>
+  // 标签页切换
   const tabs = document.querySelectorAll('.tab');
   const panels = document.querySelectorAll('.panel');
   tabs.forEach((t, i) => {
@@ -96,15 +96,20 @@ input:focus{background:#f0e4fb;transform:scale(1.01)}
     document.getElementById(id).addEventListener('click', function(){ this.classList.toggle('active'); });
   });
 
-  // ⚠️ 替换成你自己的 Bin ID 和 API Key
+  // ⚠️ 立即替换成你的真实 Bin ID 和 API Key
   const BIN_ID = '6a2a15f7da38895dfeaa9630';
-  const API_KEY = '
-$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
+  const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
   const BIN_UPDATE_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-  async function saveAllToCloud() {
+  window.saveAllToCloud = async function() {
     const statusEl = document.getElementById('syncStatus');
-    statusEl.textContent = '⏳ 正在保存...';
+    const saveBtn = document.getElementById('saveBtn');
+    
+    // 设置按钮为保存中状态
+    saveBtn.disabled = true;
+    saveBtn.textContent = '⏳ 保存中...';
+    statusEl.textContent = '⏳ 正在连接 JSONBin...';
+
     const data = {
       title: document.getElementById('adminName').value.trim(),
       email: document.getElementById('adminEmail').value.trim(),
@@ -126,16 +131,25 @@ $2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
         },
         body: JSON.stringify(data)
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      }
+
       const result = await res.json();
       if (result.record) {
         statusEl.textContent = '✅ 已保存到云端，主页将即时更新';
       } else {
-        statusEl.textContent = '❌ 保存失败：' + (result.message || '未知错误');
+        statusEl.textContent = '❌ 保存失败：返回数据格式错误';
       }
     } catch (e) {
-      statusEl.textContent = '❌ 保存失败，请检查网络';
+      statusEl.textContent = '❌ 保存失败：' + e.message;
+      console.error('保存错误:', e);
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.textContent = '💾 保存并同步到云端';
     }
-  }
+  };
 </script>
 </body>
 </html>

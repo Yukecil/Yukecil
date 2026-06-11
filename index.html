@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Yukecil · 个人主页</title>
+<title>Yukecil · 挂逼日记</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* 所有样式保持不变，包括账本模块的样式 */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --glass-bg:rgba(255,255,255,0.12);
@@ -150,7 +149,7 @@ body{
   50%{transform:translateY(-60px) rotate(180deg)}
 }
 
-/* 账本只读样式 */
+/* 账本只读模块 */
 .right-layout-wrapper { display: flex; flex-direction: column; gap: 18px; }
 .total-profit-box { text-align: center; padding: 18px; background: rgba(255, 255, 255, 0.03); }
 .total-title { font-size: 14px; color: var(--muted); letter-spacing: 1px; margin-bottom: 6px; }
@@ -159,17 +158,17 @@ body{
 .total-value.minus { color: var(--red); text-shadow: 0 0 15px rgba(248,113,113,0.4); }
 .boards-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .board-card { padding: 20px; background: rgba(255, 255, 255, 0.02); }
-.board-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 14px; }
+.board-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 .board-title { font-size: 16px; font-weight: 600; background: linear-gradient(90deg, #fff, var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.board-stats { display: flex; gap: 16px; font-size: 13px; }
+.board-stats { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; }
+.stat-item { display: flex; align-items: center; gap: 4px; }
 .stat-item.win { color: var(--green); }
 .stat-item.lose { color: var(--red); }
-.stat-val { font-family: 'JetBrains Mono', monospace; font-weight: bold; margin-left: 4px; }
-.record-list { min-height: 130px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.stat-val { font-family: 'JetBrains Mono', monospace; font-weight: bold; }
+.record-list { min-height: 100px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
 .record-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: rgba(255,255,255,0.04); border-radius: 8px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
 .record-time { color: var(--muted); font-size: 11px; }
 .no-record { text-align: center; color: var(--muted); font-size: 12px; padding-top: 40px; font-style: italic; }
-/* 去掉输入框和按钮的相关样式（已无相关元素，可保留以防万一） */
 
 @media (max-width:1024px){
   .page{padding:20px 18px 30px;}
@@ -199,6 +198,7 @@ body{
   .ht-item{font-size:15px;}
   .quick-item{padding:10px 2px;}
   .quick-icon{font-size:20px;}
+  .boards-container{grid-template-columns:1fr 1fr;}
 }
 </style>
 </head>
@@ -239,7 +239,6 @@ body{
           <span class="ht-item" id="htItem2"></span>
         </div>
       </div>
-      <!-- 联系方式移回此处 -->
       <div class="glass" style="padding:12px; margin-top:8px;">
         <div class="quick-grid">
           <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'">
@@ -254,11 +253,10 @@ body{
       </div>
     </div>
 
-    <!-- 右侧区域（只读账本） -->
     <div class="right-layout-wrapper">
       <div class="glass" style="padding:20px;">
         <div class="glass total-profit-box">
-          <div class="total-title">总输赢统计</div>
+          <div class="total-title">总账单</div>
           <div class="total-value" id="grandTotal">0</div>
         </div>
         <div class="boards-container" style="margin-top: 16px;">
@@ -274,12 +272,13 @@ body{
               <div class="no-record">暂无历史记录</div>
             </div>
           </div>
+
           <div class="glass board-card">
             <div class="board-header">
-              <span class="board-title">买球/PG</span>
+              <span class="board-title">买球 / PG</span>
               <div class="board-stats">
-                <span class="stat-item lose">输<span class="stat-val" id="pgLose">0</span></span>
-                <span class="stat-item win">赢<span class="stat-val" id="pgWin">0</span></span>
+                <span class="stat-item lose">PG 输<span class="stat-val" id="pgLose">0</span> / 赢<span class="stat-val" id="pgWin">0</span></span>
+                <span class="stat-item lose">买球 输<span class="stat-val" id="buyballLose">0</span> / 赢<span class="stat-val" id="buyballWin">0</span></span>
               </div>
             </div>
             <div class="record-list" id="pgRecords">
@@ -293,19 +292,25 @@ body{
 </div>
 
 <script>
-  // 账本数据（只读）
-  let ledgerData = { lhc: { win: 0, lose: 0, history: [] }, pg: { win: 0, lose: 0, history: [] } };
+  let ledgerData = {
+    lhc: { win: 0, lose: 0, history: [] },
+    pg: { win: 0, lose: 0, history: [] },
+    buyball: { win: 0, lose: 0, history: [] }
+  };
 
   function updateLedgerDOM() {
     document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
     document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
     document.getElementById('pgLose').textContent = ledgerData.pg.lose;
     document.getElementById('pgWin').textContent = ledgerData.pg.win;
+    document.getElementById('buyballLose').textContent = ledgerData.buyball.lose;
+    document.getElementById('buyballWin').textContent = ledgerData.buyball.win;
 
     const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
     const netPg = ledgerData.pg.win - ledgerData.pg.lose;
-    const grandTotal = netLhc + netPg;
-    
+    const netBuyball = ledgerData.buyball.win - ledgerData.buyball.lose;
+    const grandTotal = netLhc + netPg + netBuyball;
+
     const totalEl = document.getElementById('grandTotal');
     if (grandTotal > 0) {
       totalEl.textContent = '+' + grandTotal;
@@ -319,13 +324,35 @@ body{
     }
 
     renderHistory('lhc', 'lhcRecords');
-    renderHistory('pg', 'pgRecords');
+
+    const pgContainer = document.getElementById('pgRecords');
+    const combined = [
+      ...ledgerData.pg.history.map(item => ({ ...item, type: 'PG' })),
+      ...ledgerData.buyball.history.map(item => ({ ...item, type: '买球' }))
+    ];
+    combined.sort((a, b) => b.time.localeCompare(a.time));
+    const latest = combined.slice(0, 5);
+    if (latest.length === 0) {
+      pgContainer.innerHTML = '<div class="no-record">暂无历史记录</div>';
+    } else {
+      pgContainer.innerHTML = latest.map(item => {
+        const isWin = item.action === 'win';
+        const mark = isWin ? '+' : '-';
+        const color = isWin ? 'var(--green)' : 'var(--red)';
+        return `
+          <div class="record-item">
+            <span class="record-time">${item.time} [${item.type}]</span>
+            <span style="color: ${color}; font-weight: 500;">${mark}${item.amount}</span>
+          </div>
+        `;
+      }).join('');
+    }
   }
 
   function renderHistory(type, containerId) {
     const container = document.getElementById(containerId);
     const history = ledgerData[type].history;
-    if (history.length === 0) {
+    if (!history || history.length === 0) {
       container.innerHTML = '<div class="no-record">暂无历史记录</div>';
       return;
     }
@@ -343,7 +370,6 @@ body{
     }).join('');
   }
 
-  // 初始更新
   updateLedgerDOM();
 </script>
 
@@ -462,7 +488,6 @@ body{
 </script>
 
 <script>
-  // JSONBin 同步（只读配置和账本）
   const BIN_ID = '6a2a15f7da38895dfeaa9630';
   const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
   const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
@@ -475,7 +500,6 @@ body{
       const json = await res.json();
       const data = json.record;
 
-      // 更新基本信息
       if (data.title !== undefined) localStorage.setItem('userName', data.title);
       if (data.email !== undefined) localStorage.setItem('userEmail', data.email);
       if (data.telegram !== undefined) localStorage.setItem('userTelegram', data.telegram);
@@ -498,8 +522,10 @@ body{
 
       applySettings();
 
-      // 更新账本数据
       if (data.ledger) {
+        if (!data.ledger.buyball) data.ledger.buyball = { win: 0, lose: 0, history: [] };
+        if (!data.ledger.pg) data.ledger.pg = { win: 0, lose: 0, history: [] };
+        if (!data.ledger.lhc) data.ledger.lhc = { win: 0, lose: 0, history: [] };
         ledgerData = data.ledger;
         updateLedgerDOM();
       }

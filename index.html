@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* 所有样式保持不变，包括账本模块的样式 */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --glass-bg:rgba(255,255,255,0.12);
@@ -16,6 +17,8 @@
   --blue:#60a5fa;
   --white:rgba(255,255,255,0.95);
   --muted:rgba(255,255,255,0.6);
+  --green:#4ade80;
+  --red:#f87171;
 }
 body{
   min-height:100vh;
@@ -146,6 +149,28 @@ body{
   10%,90%{opacity:1}
   50%{transform:translateY(-60px) rotate(180deg)}
 }
+
+/* 账本只读样式 */
+.right-layout-wrapper { display: flex; flex-direction: column; gap: 18px; }
+.total-profit-box { text-align: center; padding: 18px; background: rgba(255, 255, 255, 0.03); }
+.total-title { font-size: 14px; color: var(--muted); letter-spacing: 1px; margin-bottom: 6px; }
+.total-value { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 600; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+.total-value.plus { color: var(--green); text-shadow: 0 0 15px rgba(74,222,128,0.4); }
+.total-value.minus { color: var(--red); text-shadow: 0 0 15px rgba(248,113,113,0.4); }
+.boards-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.board-card { padding: 20px; background: rgba(255, 255, 255, 0.02); }
+.board-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 14px; }
+.board-title { font-size: 16px; font-weight: 600; background: linear-gradient(90deg, #fff, var(--muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.board-stats { display: flex; gap: 16px; font-size: 13px; }
+.stat-item.win { color: var(--green); }
+.stat-item.lose { color: var(--red); }
+.stat-val { font-family: 'JetBrains Mono', monospace; font-weight: bold; margin-left: 4px; }
+.record-list { min-height: 130px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.record-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: rgba(255,255,255,0.04); border-radius: 8px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
+.record-time { color: var(--muted); font-size: 11px; }
+.no-record { text-align: center; color: var(--muted); font-size: 12px; padding-top: 40px; font-style: italic; }
+/* 去掉输入框和按钮的相关样式（已无相关元素，可保留以防万一） */
+
 @media (max-width:1024px){
   .page{padding:20px 18px 30px;}
   .main-grid{grid-template-columns:1fr;gap:14px;}
@@ -162,6 +187,9 @@ body{
   .quick-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
   .quick-item{padding:12px 4px;border-radius:12px;}
   .quick-label{font-size:10px;}
+  .boards-container{grid-template-columns:1fr 1fr;}
+  .board-card{padding:14px;}
+  .board-title{font-size:14px;}
 }
 @media (max-width:480px){
   .page{padding:8px 6px 20px;gap:10px;}
@@ -211,23 +239,113 @@ body{
           <span class="ht-item" id="htItem2"></span>
         </div>
       </div>
+      <!-- 联系方式移回此处 -->
+      <div class="glass" style="padding:12px; margin-top:8px;">
+        <div class="quick-grid">
+          <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'">
+            <span class="quick-icon"><i class="fa-solid fa-envelope"></i></span>
+            <span class="quick-label">邮箱</span>
+          </div>
+          <div class="quick-item" id="contactTelegram" onclick="window.open('https://t.me/yourname')">
+            <span class="quick-icon"><i class="fa-brands fa-telegram"></i></span>
+            <span class="quick-label">Telegram</span>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="glass" style="padding:20px; width:100%; max-width:100%;">
-      <div style="font-size:12px;color:#ffffff;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px;">联系方式</div>
-      <div class="quick-grid">
-        <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'">
-          <span class="quick-icon"><i class="fa-solid fa-envelope"></i></span>
-          <span class="quick-label">邮箱</span>
+    <!-- 右侧区域（只读账本） -->
+    <div class="right-layout-wrapper">
+      <div class="glass" style="padding:20px;">
+        <div class="glass total-profit-box">
+          <div class="total-title">总输赢统计</div>
+          <div class="total-value" id="grandTotal">0</div>
         </div>
-        <div class="quick-item" id="contactTelegram" onclick="window.open('https://t.me/yourname')">
-          <span class="quick-icon"><i class="fa-brands fa-telegram"></i></span>
-          <span class="quick-label">Telegram</span>
+        <div class="boards-container" style="margin-top: 16px;">
+          <div class="glass board-card">
+            <div class="board-header">
+              <span class="board-title">六合彩</span>
+              <div class="board-stats">
+                <span class="stat-item lose">输<span class="stat-val" id="lhcLose">0</span></span>
+                <span class="stat-item win">赢<span class="stat-val" id="lhcWin">0</span></span>
+              </div>
+            </div>
+            <div class="record-list" id="lhcRecords">
+              <div class="no-record">暂无历史记录</div>
+            </div>
+          </div>
+          <div class="glass board-card">
+            <div class="board-header">
+              <span class="board-title">买球/PG</span>
+              <div class="board-stats">
+                <span class="stat-item lose">输<span class="stat-val" id="pgLose">0</span></span>
+                <span class="stat-item win">赢<span class="stat-val" id="pgWin">0</span></span>
+              </div>
+            </div>
+            <div class="record-list" id="pgRecords">
+              <div class="no-record">暂无历史记录</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // 账本数据（只读）
+  let ledgerData = { lhc: { win: 0, lose: 0, history: [] }, pg: { win: 0, lose: 0, history: [] } };
+
+  function updateLedgerDOM() {
+    document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
+    document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
+    document.getElementById('pgLose').textContent = ledgerData.pg.lose;
+    document.getElementById('pgWin').textContent = ledgerData.pg.win;
+
+    const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
+    const netPg = ledgerData.pg.win - ledgerData.pg.lose;
+    const grandTotal = netLhc + netPg;
+    
+    const totalEl = document.getElementById('grandTotal');
+    if (grandTotal > 0) {
+      totalEl.textContent = '+' + grandTotal;
+      totalEl.className = 'total-value plus';
+    } else if (grandTotal < 0) {
+      totalEl.textContent = grandTotal;
+      totalEl.className = 'total-value minus';
+    } else {
+      totalEl.textContent = '0';
+      totalEl.className = 'total-value';
+    }
+
+    renderHistory('lhc', 'lhcRecords');
+    renderHistory('pg', 'pgRecords');
+  }
+
+  function renderHistory(type, containerId) {
+    const container = document.getElementById(containerId);
+    const history = ledgerData[type].history;
+    if (history.length === 0) {
+      container.innerHTML = '<div class="no-record">暂无历史记录</div>';
+      return;
+    }
+    const latest = history.slice(-5).reverse();
+    container.innerHTML = latest.map(item => {
+      const isWin = item.action === 'win';
+      const mark = isWin ? '+' : '-';
+      const color = isWin ? 'var(--green)' : 'var(--red)';
+      return `
+        <div class="record-item">
+          <span class="record-time">${item.time}</span>
+          <span style="color: ${color}; font-weight: 500;">${mark}${item.amount}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // 初始更新
+  updateLedgerDOM();
+</script>
 
 <script>
   const settings = {
@@ -343,9 +461,8 @@ body{
   applySettings();
 </script>
 
-<!-- JSONBin 读取配置 -->
 <script>
-  // ⚠️ 替换成你自己的 Bin ID 和 API Key
+  // JSONBin 同步（只读配置和账本）
   const BIN_ID = '6a2a15f7da38895dfeaa9630';
   const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
   const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
@@ -358,6 +475,7 @@ body{
       const json = await res.json();
       const data = json.record;
 
+      // 更新基本信息
       if (data.title !== undefined) localStorage.setItem('userName', data.title);
       if (data.email !== undefined) localStorage.setItem('userEmail', data.email);
       if (data.telegram !== undefined) localStorage.setItem('userTelegram', data.telegram);
@@ -379,6 +497,12 @@ body{
       settings.stars = data.starsEnabled !== undefined ? data.starsEnabled : settings.stars;
 
       applySettings();
+
+      // 更新账本数据
+      if (data.ledger) {
+        ledgerData = data.ledger;
+        updateLedgerDOM();
+      }
 
       if (data.text && data.text.trim() !== '') {
         document.getElementById('htItem1').textContent = data.text;

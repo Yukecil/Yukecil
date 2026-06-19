@@ -1,251 +1,459 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Yukecil · 挂逼版</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Yukecil · 挂逼版</title>
 
-<!-- iPhone 桌面图标 & 全屏 App 体验 -->
-<link rel="apple-touch-icon" href="https://i.ibb.co/3YRSqR6t/IMG-202606114375-180x180.jpg">
-<link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/3YRSqR6t/IMG-202606114375-180x180.jpg">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Yukecil">
+    <link rel="apple-touch-icon" href="https://i.ibb.co/3YRSqR6t/IMG-202606114375-180x180.jpg">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://i.ibb.co/3YRSqR6t/IMG-202606114375-180x180.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Yukecil">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --glass-bg: rgba(255,255,255,0.08);
-  --glass-border: rgba(255,255,255,0.2);
-  --pink:#f4a0c8;
-  --purple:#a78bfa;
-  --blue:#60a5fa;
-  --white:rgba(255,255,255,0.95);
-  --muted:rgba(255,255,255,0.6);
-  --green:#4ade80;
-  --red:#f87171;
-}
-body{
-  min-height:100vh;
-  font-family:'Inter',sans-serif;
-  overflow-x:hidden;
-  background:#0a0a1a;
-  color:var(--white);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-}
-.custom-bg-layer{
-  position:fixed;inset:0;z-index:0;
-  background-size:cover;background-position:center;
-  opacity:0;transition:opacity 0.6s;pointer-events:none;
-}
-.custom-bg-layer.active{opacity:1;}
-.bg-scene{position:fixed;inset:0;z-index:0;}
-.bg-scene svg{width:100%;height:100%;display:block}
-.aurora{
-  position:fixed;inset:0;z-index:1;
-  background: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(167,139,250,0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 5%, rgba(244,160,200,0.1) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 60% at 50% 100%, rgba(96,165,250,0.08) 0%, transparent 50%);
-  pointer-events:none;
-}
-.noise{
-  position:fixed;inset:0;z-index:2;opacity:.02;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  pointer-events:none;
-}
-.page{
-  position:relative;z-index:10;
-  width:100%;max-width:1200px;margin:0 auto;
-  padding:28px 36px 40px;
-  display:flex;flex-direction:column;gap:22px;
-}
-.glass{
-  background: var(--glass-bg);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  border:1px solid var(--glass-border);
-  border-radius:20px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
-  width:100%;max-width:100%;
-}
-.topnav{display:flex;align-items:center;justify-content:center;padding:20px 24px;}
-.logo{
-  font-family:'Dancing Script',cursive;
-  font-size:clamp(36px,8vw,64px);
-  background:linear-gradient(135deg,var(--pink),var(--purple),var(--blue));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;letter-spacing:8px;
-  filter:drop-shadow(0 0 12px rgba(167,139,250,0.5));
-  text-align:center;width:100%;line-height:1.2;word-break:break-word;
-}
-.main-grid{
-  display:grid;
-  grid-template-columns:280px 1fr;
-  gap:18px;
-  width:100%;max-width:100%;
-}
-.clock-card{padding:28px 24px;display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;max-width:100%;}
-.avatar-clock{
-  width:130px;height:130px;border-radius:50%;overflow:hidden;
-  box-shadow:0 0 20px rgba(167,139,250,0.3),0 0 30px rgba(244,160,200,0.2);
-  border:1.5px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.05);
-  flex-shrink:0;
-}
-.avatar-clock img{width:100%;height:100%;object-fit:cover;display:block;}
-.digital-time{
-  font-family:'JetBrains Mono',monospace;font-size:clamp(26px,8vw,32px);font-weight:500;
-  background:linear-gradient(90deg,var(--pink),var(--purple));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;letter-spacing:2px;text-align:center;width:100%;
-}
-.clock-date{font-size:clamp(11px,3vw,12.5px);color:#ffffff;letter-spacing:.5px;text-align:center;width:100%;}
-.hitokoto{
-  margin-top:4px;padding:14px 6px;border-radius:14px;
-  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  text-align:center;width:100%;min-height:3.2em;
-  display:flex;align-items:center;justify-content:center;overflow:hidden;
-}
-.hitokoto-text{position:relative;width:100%;display:flex;align-items:center;justify-content:center;}
-.ht-item{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  display:flex;align-items:center;justify-content:center;
-  color:#ffffff;font-style:italic;font-size:clamp(15px,4vw,18px);line-height:1.5;
-  transition:opacity 0.8s ease;opacity:0;padding:0 4px;
-  white-space:normal;word-break:break-word;
-}
-.ht-item.active{opacity:1;position:relative;}
-.hitokoto-from{display:none;}
-.quick-label{
-  background:linear-gradient(135deg, #a8e063, #56ab2f);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;font-size:clamp(11px,3vw,12px);letter-spacing:.3px;text-align:center;
-}
-.quick-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;}
-.quick-item{
-  padding:16px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;
-  border-radius:16px;cursor:pointer;transition:all .25s;
-  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  width:100%;
-}
-.quick-item:hover{
-  background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);
-  transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.2);
-}
-.quick-icon{font-size:clamp(22px,6vw,28px);line-height:1;color:var(--white);transition:color 0.2s;}
-.quick-item:hover .quick-icon{color:var(--purple);}
-.stars{position:fixed;inset:0;z-index:3;pointer-events:none;}
-.star{
-  position:absolute;border-radius:50%;background:white;
-  animation:twinkle var(--d,3s) ease-in-out infinite;
-  will-change:opacity;
-}
-@keyframes twinkle{0%,100%{opacity:var(--a,.6)}50%{opacity:var(--b,.1)}}
-.particles{position:fixed;inset:0;z-index:3;pointer-events:none;}
-.particle{
-  position:absolute;border-radius:50%;
-  animation:float var(--d,8s) ease-in-out infinite;
-  filter:blur(1px);
-  will-change:transform,opacity;
-}
-@keyframes float{
-  0%,100%{transform:translateY(0) rotate(0deg);opacity:0}
-  10%,90%{opacity:1}
-  50%{transform:translateY(-60px) rotate(180deg)}
-}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
 
-.right-layout-wrapper { display: flex; flex-direction: column; gap: 18px; }
-.total-profit-box { text-align: center; padding: 18px; background: rgba(255, 255, 255, 0.03); }
-.total-title { font-size: 14px; color: var(--muted); letter-spacing: 1px; margin-bottom: 6px; }
-.total-value { font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 600; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
-.total-value.plus { color: var(--green); text-shadow: 0 0 15px rgba(74,222,128,0.4); }
-.total-value.minus { color: var(--red); text-shadow: 0 0 15px rgba(248,113,113,0.4); }
-.boards-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.board-card { padding: 20px; background: rgba(255, 255, 255, 0.02); }
-.board-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  padding-bottom: 12px;
-  margin-bottom: 14px;
-}
-.board-title {
-  font-size: 18px;
-  font-weight: 700;
-  background: linear-gradient(90deg, #fff, var(--muted));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 8px;
-}
-.board-stats {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  font-size: 14px;
-  font-weight: 500;
-}
-.stat-item { display: flex; align-items: center; gap: 4px; }
-.stat-item.win { color: var(--green); }
-.stat-item.lose { color: var(--red); }
-.stat-val { font-family: 'JetBrains Mono', monospace; font-weight: bold; }
-.record-list { min-height: 100px; display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-.record-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: rgba(255,255,255,0.04); border-radius: 8px; font-size: 13px; font-family: 'JetBrains Mono', monospace; }
-.record-time { color: var(--muted); font-size: 11px; }
-.no-record { text-align: center; color: var(--muted); font-size: 12px; padding-top: 40px; font-style: italic; }
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --pink: #f4a0c8;
+            --purple: #a78bfa;
+            --blue: #60a5fa;
+            --white: rgba(255, 255, 255, 0.95);
+            --muted: rgba(255, 255, 255, 0.6);
+            --green: #4ade80;
+            --red: #f87171;
+        }
 
-@media (max-width:1024px){
-  .page{padding:20px 18px 30px;}
-  .main-grid{grid-template-columns:1fr;gap:14px;}
-  .logo{width:100%;letter-spacing:6px;}
-}
-@media (max-width:768px){
-  .page{padding:12px 10px 24px;gap:12px;}
-  .topnav{padding:14px 10px;}
-  .logo{font-size:28px;}
-  .clock-card{padding:20px 12px;}
-  .avatar-clock{width:100px;height:100px;}
-  .hitokoto{padding:12px 2px;}
-  .ht-item{font-size:16px;}
-  .quick-grid{grid-template-columns:repeat(2,1fr);gap:6px;}
-  .quick-item{padding:12px 4px;border-radius:12px;}
-  .quick-label{font-size:10px;}
-  .boards-container{grid-template-columns: repeat(3, 1fr); gap: 8px;}
-  .board-card{padding:14px;}
-  .board-title{font-size:16px;}
-  .board-stats{font-size:12px; gap:12px;}
-}
-@media (max-width:480px){
-  .page{padding:8px 6px 20px;gap:10px;}
-  .logo{font-size:24px;}
-  .avatar-clock{width:80px;height:80px;}
-  .digital-time{font-size:22px;}
-  .ht-item{font-size:15px;}
-  .quick-item{padding:10px 2px;}
-  .quick-icon{font-size:20px;}
-  .boards-container{grid-template-columns:1fr 1fr 1fr; gap:4px;}
-  .board-card{padding:10px;}
-  .board-title{font-size:14px;}
-  .board-stats{font-size:11px; gap:8px;}
-}
-</style>
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background: #0a0a1a;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .custom-bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.6s;
+            pointer-events: none;
+        }
+
+        .custom-bg-layer.active {
+            opacity: 1;
+        }
+
+        .bg-scene {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .bg-scene svg {
+            width: 100%;
+            height: 100%;
+            display: block
+        }
+
+        .aurora {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(167, 139, 250, 0.12) 0%, transparent 60%),
+            radial-gradient(ellipse 60% 40% at 80% 5%, rgba(244, 160, 200, 0.1) 0%, transparent 55%),
+            radial-gradient(ellipse 50% 60% at 50% 100%, rgba(96, 165, 250, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            opacity: .02;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .page {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 28px 36px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .topnav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 24px;
+        }
+
+        .logo {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(36px, 8vw, 64px);
+            background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.5));
+            text-align: center;
+            width: 100%;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .clock-card {
+            padding: 28px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .avatar-clock {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3), 0 0 30px rgba(244, 160, 200, 0.2);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.05);
+            flex-shrink: 0;
+        }
+
+        .avatar-clock img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .digital-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(26px, 8vw, 32px);
+            font-weight: 500;
+            background: linear-gradient(90deg, var(--pink), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .clock-date {
+            font-size: clamp(11px, 3vw, 12.5px);
+            color: #ffffff;
+            letter-spacing: .5px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .hitokoto {
+            margin-top: 4px;
+            padding: 14px 6px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 100%;
+            min-height: 3.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hitokoto-text {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ht-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-style: italic;
+            font-size: clamp(15px, 4vw, 18px);
+            line-height: 1.5;
+            transition: opacity 0.8s ease;
+            opacity: 0;
+            padding: 0 4px;
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .ht-item.active {
+            opacity: 1;
+            position: relative;
+        }
+
+        .hitokoto-from {
+            display: none;
+        }
+
+        .quick-label {
+            background: linear-gradient(135deg, #a8e063, #56ab2f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: clamp(11px, 3vw, 12px);
+            letter-spacing: .3px;
+            text-align: center;
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .quick-item {
+            padding: 16px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all .25s;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+        }
+
+        .quick-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .quick-icon {
+            font-size: clamp(22px, 6vw, 28px);
+            line-height: 1;
+            color: var(--white);
+            transition: color 0.2s;
+        }
+
+        .quick-item:hover .quick-icon {
+            color: var(--purple);
+        }
+
+        .stars {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            animation: twinkle var(--d, 3s) ease-in-out infinite;
+            will-change: opacity;
+        }
+
+        @keyframes twinkle {
+            0%, 100% {
+                opacity: var(--a, .6)
+            }
+            50% {
+                opacity: var(--b, .1)
+            }
+        }
+
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float var(--d, 8s) ease-in-out infinite;
+            filter: blur(1px);
+            will-change: transform, opacity;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0
+            }
+            10%, 90% {
+                opacity: 1
+            }
+            50% {
+                transform: translateY(-60px) rotate(180deg)
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .page {
+                padding: 20px 18px 30px;
+            }
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+            .logo {
+                width: 100%;
+                letter-spacing: 6px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                padding: 12px 10px 24px;
+                gap: 12px;
+            }
+            .topnav {
+                padding: 14px 10px;
+            }
+            .logo {
+                font-size: 28px;
+            }
+            .clock-card {
+                padding: 20px 12px;
+            }
+            .avatar-clock {
+                width: 100px;
+                height: 100px;
+            }
+            .hitokoto {
+                padding: 12px 2px;
+            }
+            .ht-item {
+                font-size: 16px;
+            }
+            .quick-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            .quick-item {
+                padding: 12px 4px;
+                border-radius: 12px;
+            }
+            .quick-label {
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: 8px 6px 20px;
+                gap: 10px;
+            }
+            .logo {
+                font-size: 24px;
+            }
+            .avatar-clock {
+                width: 80px;
+                height: 80px;
+            }
+            .digital-time {
+                font-size: 22px;
+            }
+            .ht-item {
+                font-size: 15px;
+            }
+            .quick-item {
+                padding: 10px 2px;
+            }
+            .quick-icon {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="custom-bg-layer" id="customBgLayer"></div>
 <div class="bg-scene" id="defaultBgScene">
-  <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-    <defs>
-      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0f3c"/><stop offset="25%" stop-color="#2d1057"/><stop offset="45%" stop-color="#5b1f7a"/><stop offset="60%" stop-color="#b44fa8"/><stop offset="75%" stop-color="#e8875a"/><stop offset="88%" stop-color="#f2b96a"/><stop offset="100%" stop-color="#c06030"/></linearGradient>
-      <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c06030" stop-opacity=".7"/><stop offset="30%" stop-color="#7a3590" stop-opacity=".6"/><stop offset="100%" stop-color="#0d0820" stop-opacity=".95"/></linearGradient>
-      <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <filter id="softglow"><feGaussianBlur stdDeviation="6"/></filter>
-    </defs>
-    <rect width="1600" height="900" fill="url(#sky)"/>
-    <circle cx="1350" cy="95" r="38" fill="#fff5e0" opacity=".95" filter="url(#glow)"/>
-  </svg>
+    <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a0f3c"/>
+                <stop offset="25%" stop-color="#2d1057"/>
+                <stop offset="45%" stop-color="#5b1f7a"/>
+                <stop offset="60%" stop-color="#b44fa8"/>
+                <stop offset="75%" stop-color="#e8875a"/>
+                <stop offset="88%" stop-color="#f2b96a"/>
+                <stop offset="100%" stop-color="#c06030"/>
+            </linearGradient>
+            <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#c06030" stop-opacity=".7"/>
+                <stop offset="30%" stop-color="#7a3590" stop-opacity=".6"/>
+                <stop offset="100%" stop-color="#0d0820" stop-opacity=".95"/>
+            </linearGradient>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="3" result="b"/>
+                <feMerge>
+                    <feMergeNode in="b"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+            <filter id="softglow">
+                <feGaussianBlur stdDeviation="6"/>
+            </filter>
+        </defs>
+        <rect width="1600" height="900" fill="url(#sky)"/>
+        <circle cx="1350" cy="95" r="38" fill="#fff5e0" opacity=".95" filter="url(#glow)"/>
+    </svg>
 </div>
 <div class="aurora"></div>
 <div class="noise"></div>
@@ -253,320 +461,214 @@ body{
 <div class="particles" id="particles"></div>
 
 <div class="page">
-  <nav class="glass topnav">
-    <div class="logo" id="logoDisplay">Yukecil</div>
-  </nav>
+    <nav class="glass topnav">
+        <div class="logo" id="logoDisplay">Yukecil</div>
+    </nav>
 
-  <div class="main-grid">
-    <div class="glass clock-card">
-      <div class="avatar-clock" id="avatarContainer">
-        <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a78bfa'/%3E%3Cstop offset='100%25' stop-color='%23f4a0c8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23g)'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='48' font-family='Arial' font-weight='bold'%3EY%3C/text%3E%3C/svg%3E" alt="头像">
-      </div>
-      <div class="digital-time" id="digiTime">00:00:00</div>
-      <div class="clock-date" id="clockDate">加载中...</div>
-      <div class="hitokoto" id="hitokotoBox">
-        <div class="hitokoto-text" id="hitokotoWrapper">
-          <span class="ht-item active" id="htItem1">正在加载一言...</span>
-          <span class="ht-item" id="htItem2"></span>
+    <div class="main-grid">
+        <div class="glass clock-card">
+            <div class="avatar-clock" id="avatarContainer">
+                <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a78bfa'/%3E%3Cstop offset='100%25' stop-color='%23f4a0c8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23g)'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='48' font-family='Arial' font-weight='bold'%3EY%3C/text%3E%3C/svg%3E" alt="头像">
+            </div>
+            <div class="digital-time" id="digiTime">00:00:00</div>
+            <div class="clock-date" id="clockDate">加载中...</div>
+            <div class="hitokoto" id="hitokotoBox">
+                <div class="hitokoto-text" id="hitokotoWrapper">
+                    <span class="ht-item active" id="htItem1">正在加载一言...</span>
+                    <span class="ht-item" id="htItem2"></span>
+                </div>
+            </div>
+            <div class="glass" style="padding:12px; margin-top:8px;">
+                <div class="quick-grid">
+                    <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'">
+                        <span class="quick-icon"><i class="fa-solid fa-envelope"></i></span>
+                        <span class="quick-label">邮箱</span>
+                    </div>
+                    <div class="quick-item" id="contactTelegram" onclick="window.open('https://t.me/yourname')">
+                        <span class="quick-icon"><i class="fa-brands fa-telegram"></i></span>
+                        <span class="quick-label">Telegram</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="glass" style="padding:12px; margin-top:8px;">
-        <div class="quick-grid">
-          <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'">
-            <span class="quick-icon"><i class="fa-solid fa-envelope"></i></span>
-            <span class="quick-label">邮箱</span>
-          </div>
-          <div class="quick-item" id="contactTelegram" onclick="window.open('https://t.me/yourname')">
-            <span class="quick-icon"><i class="fa-brands fa-telegram"></i></span>
-            <span class="quick-label">Telegram</span>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <div class="right-layout-wrapper">
-      <div class="glass" style="padding:20px;">
-        <div class="glass total-profit-box">
-          <div class="total-title">总账单</div>
-          <div class="total-value" id="grandTotal">0</div>
-        </div>
-        <div class="boards-container" style="margin-top: 16px;">
-          <div class="glass board-card">
-            <div class="board-header">
-              <span class="board-title">买码</span>
-              <div class="board-stats">
-                <span class="stat-item lose">输<span class="stat-val" id="lhcLose">0</span></span>
-                <span class="stat-item win">赢<span class="stat-val" id="lhcWin">0</span></span>
-              </div>
-            </div>
-            <div class="record-list" id="lhcRecords">
-              <div class="no-record">暂无历史记录</div>
-            </div>
-          </div>
-          <div class="glass board-card">
-            <div class="board-header">
-              <span class="board-title">买球</span>
-              <div class="board-stats">
-                <span class="stat-item lose">输<span class="stat-val" id="buyballLose">0</span></span>
-                <span class="stat-item win">赢<span class="stat-val" id="buyballWin">0</span></span>
-              </div>
-            </div>
-            <div class="record-list" id="buyballRecords">
-              <div class="no-record">暂无历史记录</div>
-            </div>
-          </div>
-          <div class="glass board-card">
-            <div class="board-header">
-              <span class="board-title">PG</span>
-              <div class="board-stats">
-                <span class="stat-item lose">输<span class="stat-val" id="pgLose">0</span></span>
-                <span class="stat-item win">赢<span class="stat-val" id="pgWin">0</span></span>
-              </div>
-            </div>
-            <div class="record-list" id="pgRecords">
-              <div class="no-record">暂无历史记录</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
-  let ledgerData = {
-    lhc: { win: 0, lose: 0, history: [] },
-    pg: { win: 0, lose: 0, history: [] },
-    buyball: { win: 0, lose: 0, history: [] }
-  };
+    const settings = {
+        name: localStorage.getItem('userName') || 'Yukecil',
+        email: localStorage.getItem('userEmail') || 'hello@example.com',
+        telegram: localStorage.getItem('userTelegram') || '@yourname',
+        avatar: localStorage.getItem('userAvatar') || '',
+        bgMobile: localStorage.getItem('bgMobile') || '',
+        bgDesktop: localStorage.getItem('bgDesktop') || '',
+        hitokoto: localStorage.getItem('hitokotoEnabled') !== 'false',
+        particles: localStorage.getItem('particlesEnabled') !== 'false',
+        stars: localStorage.getItem('starsEnabled') !== 'false'
+    };
 
-  function updateLedgerDOM() {
-    document.getElementById('lhcLose').textContent = ledgerData.lhc.lose;
-    document.getElementById('lhcWin').textContent = ledgerData.lhc.win;
-    document.getElementById('buyballLose').textContent = ledgerData.buyball.lose;
-    document.getElementById('buyballWin').textContent = ledgerData.buyball.win;
-    document.getElementById('pgLose').textContent = ledgerData.pg.lose;
-    document.getElementById('pgWin').textContent = ledgerData.pg.win;
-
-    const netLhc = ledgerData.lhc.win - ledgerData.lhc.lose;
-    const netBuyball = ledgerData.buyball.win - ledgerData.buyball.lose;
-    const netPg = ledgerData.pg.win - ledgerData.pg.lose;
-    const grandTotal = netLhc + netBuyball + netPg;
-
-    const totalEl = document.getElementById('grandTotal');
-    if (grandTotal > 0) {
-      totalEl.textContent = '+' + grandTotal;
-      totalEl.className = 'total-value plus';
-    } else if (grandTotal < 0) {
-      totalEl.textContent = grandTotal;
-      totalEl.className = 'total-value minus';
-    } else {
-      totalEl.textContent = '0';
-      totalEl.className = 'total-value';
+    function applySettings() {
+        document.getElementById('logoDisplay').textContent = settings.name;
+        if (settings.avatar) document.getElementById('avatarImg').src = settings.avatar;
+        const emailEl = document.getElementById('contactEmail');
+        emailEl.setAttribute('onclick', `window.location.href='mailto:${settings.email}'`);
+        const tgEl = document.getElementById('contactTelegram');
+        const tgUsername = settings.telegram.startsWith('@') ? settings.telegram.substring(1) : settings.telegram;
+        tgEl.setAttribute('onclick', `window.open('https://t.me/${tgUsername}')`);
+        document.getElementById('hitokotoBox').style.display = settings.hitokoto ? '' : 'none';
+        initParticles();
+        initStars();
+        applyBackgrounds();
     }
 
-    renderHistory('lhc', 'lhcRecords');
-    renderHistory('buyball', 'buyballRecords');
-    renderHistory('pg', 'pgRecords');
-  }
-
-  function renderHistory(type, containerId) {
-    const container = document.getElementById(containerId);
-    const history = ledgerData[type].history;
-    if (!history || history.length === 0) {
-      container.innerHTML = '<div class="no-record">暂无历史记录</div>';
-      return;
-    }
-    const latest = history.slice(-5).reverse();
-    container.innerHTML = latest.map(item => {
-      const isWin = item.action === 'win';
-      const mark = isWin ? '+' : '-';
-      const color = isWin ? 'var(--green)' : 'var(--red)';
-      return `
-        <div class="record-item">
-          <span class="record-time">${item.time}</span>
-          <span style="color: ${color}; font-weight: 500;">${mark}${item.amount}</span>
-        </div>
-      `;
-    }).join('');
-  }
-
-  updateLedgerDOM();
-</script>
-
-<script>
-  const settings = {
-    name: localStorage.getItem('userName') || 'Yukecil',
-    email: localStorage.getItem('userEmail') || 'hello@example.com',
-    telegram: localStorage.getItem('userTelegram') || '@yourname',
-    avatar: localStorage.getItem('userAvatar') || '',
-    bgMobile: localStorage.getItem('bgMobile') || '',
-    bgDesktop: localStorage.getItem('bgDesktop') || '',
-    hitokoto: localStorage.getItem('hitokotoEnabled') !== 'false',
-    particles: localStorage.getItem('particlesEnabled') !== 'false',
-    stars: localStorage.getItem('starsEnabled') !== 'false'
-  };
-
-  function applySettings() {
-    document.getElementById('logoDisplay').textContent = settings.name;
-    if(settings.avatar) document.getElementById('avatarImg').src = settings.avatar;
-    const emailEl = document.getElementById('contactEmail');
-    emailEl.setAttribute('onclick', `window.location.href='mailto:${settings.email}'`);
-    const tgEl = document.getElementById('contactTelegram');
-    const tgUsername = settings.telegram.startsWith('@') ? settings.telegram.substring(1) : settings.telegram;
-    tgEl.setAttribute('onclick', `window.open('https://t.me/${tgUsername}')`);
-    document.getElementById('hitokotoBox').style.display = settings.hitokoto ? '' : 'none';
-    initParticles();
-    initStars();
-    applyBackgrounds();
-  }
-
-  function applyBackgrounds() {
-    const isMobile = window.innerWidth <= 768;
-    const bgUrl = isMobile ? settings.bgMobile : settings.bgDesktop;
-    const customBg = document.getElementById('customBgLayer');
-    const defaultBg = document.getElementById('defaultBgScene');
-    if(bgUrl) {
-      customBg.style.backgroundImage = `url(${bgUrl})`;
-      customBg.classList.add('active');
-      defaultBg.style.opacity = '0';
-    } else {
-      customBg.classList.remove('active');
-      defaultBg.style.opacity = '1';
-    }
-  }
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(applyBackgrounds, 200);
-  });
-
-  function initParticles(){
-    const container = document.getElementById('particles');
-    if(!settings.particles) { container.innerHTML = ''; return; }
-    if(container.children.length > 0) return;
-    const colors=['rgba(167,139,250,','rgba(244,160,200,','rgba(96,165,250,','rgba(251,191,36,'];
-    for(let i=0;i<8;i++){
-      const p=document.createElement('div'); p.className='particle';
-      const sz=Math.random()*3+1;
-      const col=colors[Math.floor(Math.random()*colors.length)];
-      p.style.cssText=`width:${sz}px;height:${sz}px;background:${col}0.6);top:${Math.random()*80+10}%;left:${Math.random()*90+5}%;--d:${(Math.random()*6+6).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
-      container.appendChild(p);
-    }
-  }
-
-  function initStars(){
-    const container = document.getElementById('stars');
-    if(!settings.stars) { container.innerHTML = ''; return; }
-    if(container.children.length > 0) return;
-    for(let i=0;i<40;i++){
-      const s=document.createElement('div'); s.className='star';
-      const sz=Math.random()*1.5+.5;
-      s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--a:${Math.random()*.8+.2};--b:${Math.random()*.15};--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
-      container.appendChild(s);
-    }
-  }
-
-  const weekDays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-  function pad(n){return String(n).padStart(2,'0');}
-  function updateClock(){
-    const now = new Date();
-    document.getElementById('digiTime').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-    document.getElementById('clockDate').textContent = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${weekDays[now.getDay()]}`;
-  }
-  setInterval(updateClock,1000);
-  updateClock();
-
-  let activeIndex = 1;
-  const item1 = document.getElementById('htItem1');
-  const item2 = document.getElementById('htItem2');
-  function switchHitokoto(text) {
-    const current = activeIndex === 1 ? item1 : item2;
-    const next = activeIndex === 1 ? item2 : item1;
-    next.textContent = text;
-    current.classList.remove('active');
-    next.classList.add('active');
-    activeIndex = activeIndex === 1 ? 2 : 1;
-  }
-  let lastHitokoto = '';
-  async function fetchHitokoto() {
-    try {
-      const res = await fetch('https://v1.hitokoto.cn');
-      const data = await res.json();
-      if (data?.hitokoto && data.hitokoto !== lastHitokoto) {
-        lastHitokoto = data.hitokoto;
-        switchHitokoto(`「${data.hitokoto}」`);
-      }
-    } catch (e) {}
-  }
-  fetchHitokoto();
-  window.hitokotoInterval = setInterval(fetchHitokoto, 30000);
-
-  initStars();
-  initParticles();
-  applySettings();
-</script>
-
-<script>
-  const BIN_ID = '6a2a15f7da38895dfeaa9630';
-  const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
-  const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
-
-  async function loadCloudConfig() {
-    try {
-      const res = await fetch(BIN_URL, {
-        headers: { 'X-Master-Key': API_KEY }
-      });
-      const json = await res.json();
-      const data = json.record;
-
-      if (data.title !== undefined) localStorage.setItem('userName', data.title);
-      if (data.email !== undefined) localStorage.setItem('userEmail', data.email);
-      if (data.telegram !== undefined) localStorage.setItem('userTelegram', data.telegram);
-      if (data.avatar !== undefined) localStorage.setItem('userAvatar', data.avatar);
-      if (data.bgMobile !== undefined) localStorage.setItem('bgMobile', data.bgMobile);
-      if (data.bgDesktop !== undefined) localStorage.setItem('bgDesktop', data.bgDesktop);
-      if (data.hitokotoEnabled !== undefined) localStorage.setItem('hitokotoEnabled', data.hitokotoEnabled);
-      if (data.particlesEnabled !== undefined) localStorage.setItem('particlesEnabled', data.particlesEnabled);
-      if (data.starsEnabled !== undefined) localStorage.setItem('starsEnabled', data.starsEnabled);
-
-      settings.name = data.title || settings.name;
-      settings.email = data.email || settings.email;
-      settings.telegram = data.telegram || settings.telegram;
-      settings.avatar = data.avatar !== undefined ? data.avatar : settings.avatar;
-      settings.bgMobile = data.bgMobile !== undefined ? data.bgMobile : settings.bgMobile;
-      settings.bgDesktop = data.bgDesktop !== undefined ? data.bgDesktop : settings.bgDesktop;
-      settings.hitokoto = data.hitokotoEnabled !== undefined ? data.hitokotoEnabled : settings.hitokoto;
-      settings.particles = data.particlesEnabled !== undefined ? data.particlesEnabled : settings.particles;
-      settings.stars = data.starsEnabled !== undefined ? data.starsEnabled : settings.stars;
-
-      applySettings();
-
-      if (data.ledger) {
-        if (!data.ledger.buyball) data.ledger.buyball = { win: 0, lose: 0, history: [] };
-        if (!data.ledger.pg) data.ledger.pg = { win: 0, lose: 0, history: [] };
-        if (!data.ledger.lhc) data.ledger.lhc = { win: 0, lose: 0, history: [] };
-        ledgerData = data.ledger;
-        updateLedgerDOM();
-      }
-
-      if (data.text && data.text.trim() !== '') {
-        document.getElementById('htItem1').textContent = data.text;
-        document.getElementById('htItem1').classList.add('active');
-        document.getElementById('htItem2').classList.remove('active');
-        if (window.hitokotoInterval) {
-          clearInterval(window.hitokotoInterval);
-          window.hitokotoInterval = null;
+    function applyBackgrounds() {
+        const isMobile = window.innerWidth <= 768;
+        const bgUrl = isMobile ? settings.bgMobile : settings.bgDesktop;
+        const customBg = document.getElementById('customBgLayer');
+        const defaultBg = document.getElementById('defaultBgScene');
+        if (bgUrl) {
+            customBg.style.backgroundImage = `url(${bgUrl})`;
+            customBg.classList.add('active');
+            defaultBg.style.opacity = '0';
+        } else {
+            customBg.classList.remove('active');
+            defaultBg.style.opacity = '1';
         }
-      }
-      console.log('✅ 云端配置已应用');
-    } catch (e) {
-      console.error('❌ 云端同步失败', e);
     }
-  }
 
-  loadCloudConfig();
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(applyBackgrounds, 200);
+    });
+
+    function initParticles() {
+        const container = document.getElementById('particles');
+        if (!settings.particles) {
+            container.innerHTML = '';
+            return;
+        }
+        if (container.children.length > 0) return;
+        const colors = ['rgba(167,139,250,', 'rgba(244,160,200,', 'rgba(96,165,250,', 'rgba(251,191,36,'];
+        for (let i = 0; i < 8; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const sz = Math.random() * 3 + 1;
+            const col = colors[Math.floor(Math.random() * colors.length)];
+            p.style.cssText = `width:${sz}px;height:${sz}px;background:${col}0.6);top:${Math.random() * 80 + 10}%;left:${Math.random() * 90 + 5}%;--d:${(Math.random() * 6 + 6).toFixed(1)}s;animation-delay:${(Math.random() * 5).toFixed(1)}s`;
+            container.appendChild(p);
+        }
+    }
+
+    function initStars() {
+        const container = document.getElementById('stars');
+        if (!settings.stars) {
+            container.innerHTML = '';
+            return;
+        }
+        if (container.children.length > 0) return;
+        for (let i = 0; i < 40; i++) {
+            const s = document.createElement('div');
+            s.className = 'star';
+            const sz = Math.random() * 1.5 + .5;
+            s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random() * 55}%;left:${Math.random() * 100}%;--a:${Math.random() * .8 + .2};--b:${Math.random() * .15};--d:${(Math.random() * 4 + 2).toFixed(1)}s;animation-delay:${(Math.random() * 5).toFixed(1)}s`;
+            container.appendChild(s);
+        }
+    }
+
+    const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+    function pad(n) {
+        return String(n).padStart(2, '0');
+    }
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('digiTime').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        document.getElementById('clockDate').textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日 ${weekDays[now.getDay()]}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    let activeIndex = 1;
+    const item1 = document.getElementById('htItem1');
+    const item2 = document.getElementById('htItem2');
+    function switchHitokoto(text) {
+        const current = activeIndex === 1 ? item1 : item2;
+        const next = activeIndex === 1 ? item2 : item1;
+        next.textContent = text;
+        current.classList.remove('active');
+        next.classList.add('active');
+        activeIndex = activeIndex === 1 ? 2 : 1;
+    }
+    let lastHitokoto = '';
+    async function fetchHitokoto() {
+        try {
+            const res = await fetch('https://v1.hitokoto.cn');
+            const data = await res.json();
+            if (data?.hitokoto && data.hitokoto !== lastHitokoto) {
+                lastHitokoto = data.hitokoto;
+                switchHitokoto(`「${data.hitokoto}」`);
+            }
+        } catch (e) {}
+    }
+    fetchHitokoto();
+    window.hitokotoInterval = setInterval(fetchHitokoto, 30000);
+
+    initStars();
+    initParticles();
+    applySettings();
+</script>
+
+<script>
+    const BIN_ID = '6a2a15f7da38895dfeaa9630';
+    const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
+
+    async function loadCloudConfig() {
+        try {
+            const res = await fetch(BIN_URL, {
+                headers: { 'X-Master-Key': API_KEY }
+            });
+            const json = await res.json();
+            const data = json.record;
+
+            if (data.title !== undefined) localStorage.setItem('userName', data.title);
+            if (data.email !== undefined) localStorage.setItem('userEmail', data.email);
+            if (data.telegram !== undefined) localStorage.setItem('userTelegram', data.telegram);
+            if (data.avatar !== undefined) localStorage.setItem('userAvatar', data.avatar);
+            if (data.bgMobile !== undefined) localStorage.setItem('bgMobile', data.bgMobile);
+            if (data.bgDesktop !== undefined) localStorage.setItem('bgDesktop', data.bgDesktop);
+            if (data.hitokotoEnabled !== undefined) localStorage.setItem('hitokotoEnabled', data.hitokotoEnabled);
+            if (data.particlesEnabled !== undefined) localStorage.setItem('particlesEnabled', data.particlesEnabled);
+            if (data.starsEnabled !== undefined) localStorage.setItem('starsEnabled', data.starsEnabled);
+
+            settings.name = data.title || settings.name;
+            settings.email = data.email || settings.email;
+            settings.telegram = data.telegram || settings.telegram;
+            settings.avatar = data.avatar !== undefined ? data.avatar : settings.avatar;
+            settings.bgMobile = data.bgMobile !== undefined ? data.bgMobile : settings.bgMobile;
+            settings.bgDesktop = data.bgDesktop !== undefined ? data.bgDesktop : settings.bgDesktop;
+            settings.hitokoto = data.hitokotoEnabled !== undefined ? data.hitokotoEnabled : settings.hitokoto;
+            settings.particles = data.particlesEnabled !== undefined ? data.particlesEnabled : settings.particles;
+            settings.stars = data.starsEnabled !== undefined ? data.starsEnabled : settings.stars;
+
+            applySettings();
+
+            if (data.text && data.text.trim() !== '') {
+                document.getElementById('htItem1').textContent = data.text;
+                document.getElementById('htItem1').classList.add('active');
+                document.getElementById('htItem2').classList.remove('active');
+                if (window.hitokotoInterval) {
+                    clearInterval(window.hitokotoInterval);
+                    window.hitokotoInterval = null;
+                }
+            }
+            console.log('✅ 云端配置已应用');
+        } catch (e) {
+            console.error('❌ 云端同步失败', e);
+        }
+    }
+
+    loadCloudConfig();
 </script>
 </body>
 </html>

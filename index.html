@@ -13,19 +13,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
+        * { margin:0; padding:0; box-sizing:border-box }
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-bg: rgba(255,255,255,0.08);
+            --glass-border: rgba(255,255,255,0.2);
             --pink: #f4a0c8;
             --purple: #a78bfa;
             --blue: #60a5fa;
-            --white: rgba(255, 255, 255, 0.95);
-            --muted: rgba(255, 255, 255, 0.6);
+            --white: rgba(255,255,255,0.95);
+            --muted: rgba(255,255,255,0.6);
             --green: #4ade80;
             --red: #f87171;
         }
@@ -40,55 +36,30 @@
             align-items: center;
         }
         .custom-bg-layer {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            background-size: cover;
-            background-position: center;
-            opacity: 0;
-            transition: opacity 0.6s;
-            pointer-events: none;
+            position: fixed; inset: 0; z-index: 0;
+            background-size: cover; background-position: center;
+            opacity: 0; transition: opacity 0.6s; pointer-events: none;
         }
-        .custom-bg-layer.active {
-            opacity: 1;
-        }
-        .bg-scene {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-        }
-        .bg-scene svg {
-            width: 100%;
-            height: 100%;
-            display: block
-        }
+        .custom-bg-layer.active { opacity: 1; }
+        .bg-scene { position: fixed; inset: 0; z-index: 0; }
+        .bg-scene svg { width: 100%; height: 100%; display: block }
         .aurora {
-            position: fixed;
-            inset: 0;
-            z-index: 1;
-            background: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(167, 139, 250, 0.12) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 5%, rgba(244, 160, 200, 0.1) 0%, transparent 55%),
-                radial-gradient(ellipse 50% 60% at 50% 100%, rgba(96, 165, 250, 0.08) 0%, transparent 50%);
+            position: fixed; inset: 0; z-index: 1;
+            background: radial-gradient(ellipse 80% 50% at 20% 10%, rgba(167,139,250,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 5%, rgba(244,160,200,0.1) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 60% at 50% 100%, rgba(96,165,250,0.08) 0%, transparent 50%);
             pointer-events: none;
         }
         .noise {
-            position: fixed;
-            inset: 0;
-            z-index: 2;
-            opacity: .02;
+            position: fixed; inset: 0; z-index: 2; opacity: .02;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
             pointer-events: none;
         }
         .page {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+            position: relative; z-index: 10;
+            width: 100%; max-width: 1200px; margin: 0 auto;
             padding: 28px 36px 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
+            display: flex; flex-direction: column; gap: 22px;
         }
         .glass {
             background: var(--glass-bg);
@@ -96,219 +67,92 @@
             -webkit-backdrop-filter: blur(4px);
             border: 1px solid var(--glass-border);
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 100%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+            width: 100%; max-width: 100%;
         }
-        .topnav {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 24px;
-        }
+        .topnav { display: flex; align-items: center; justify-content: center; padding: 20px 24px; }
         .logo {
             font-family: 'Dancing Script', cursive;
             font-size: clamp(36px, 8vw, 64px);
             background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 8px;
-            filter: drop-shadow(0 0 12px rgba(167, 139, 250, 0.5));
-            text-align: center;
-            width: 100%;
-            line-height: 1.2;
-            word-break: break-word;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: 8px;
+            filter: drop-shadow(0 0 12px rgba(167,139,250,0.5));
+            text-align: center; width: 100%; line-height: 1.2; word-break: break-word;
         }
         .main-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 18px;
             width: 100%;
-            max-width: 100%;
         }
         .clock-card {
             padding: 28px 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            width: 100%;
-            max-width: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 16px; width: 100%;
         }
         .avatar-clock {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.3), 0 0 30px rgba(244, 160, 200, 0.2);
-            border: 1.5px solid rgba(255, 255, 255, 0.25);
-            background: rgba(255, 255, 255, 0.05);
-            flex-shrink: 0;
+            width: 130px; height: 130px; border-radius: 50%; overflow: hidden;
+            box-shadow: 0 0 20px rgba(167,139,250,0.3), 0 0 30px rgba(244,160,200,0.2);
+            border: 1.5px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.05); flex-shrink: 0;
         }
-        .avatar-clock img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
+        .avatar-clock img { width: 100%; height: 100%; object-fit: cover; }
         .digital-time {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: clamp(26px, 8vw, 32px);
-            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace; font-size: clamp(26px, 8vw, 32px); font-weight: 500;
             background: linear-gradient(90deg, var(--pink), var(--purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 2px;
-            text-align: center;
-            width: 100%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; letter-spacing: 2px; text-align: center; width: 100%;
         }
-        .clock-date {
-            font-size: clamp(11px, 3vw, 12.5px);
-            color: #ffffff;
-            letter-spacing: .5px;
-            text-align: center;
-            width: 100%;
-        }
+        .clock-date { font-size: clamp(11px, 3vw, 12.5px); color: #ffffff; letter-spacing: .5px; text-align: center; width: 100%; }
         .hitokoto {
-            margin-top: 4px;
-            padding: 14px 6px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            width: 100%;
-            min-height: 3.2em;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+            margin-top: 4px; padding: 14px 6px; border-radius: 14px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; width: 100%; min-height: 3.2em;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
-        .hitokoto-text {
-            position: relative;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+        .hitokoto-text { position: relative; width: 100%; display: flex; align-items: center; justify-content: center; }
         .ht-item {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-style: italic;
-            font-size: clamp(15px, 4vw, 18px);
-            line-height: 1.5;
-            transition: opacity 0.8s ease;
-            opacity: 0;
-            padding: 0 4px;
-            white-space: normal;
-            word-break: break-word;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; align-items: center; justify-content: center;
+            color: #ffffff; font-style: italic; font-size: clamp(15px, 4vw, 18px); line-height: 1.5;
+            transition: opacity 0.8s ease; opacity: 0; padding: 0 4px;
+            white-space: normal; word-break: break-word;
         }
-        .ht-item.active {
-            opacity: 1;
-            position: relative;
-        }
-        .hitokoto-from {
-            display: none;
-        }
+        .ht-item.active { opacity: 1; position: relative; }
         .quick-label {
             background: linear-gradient(135deg, #a8e063, #56ab2f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: clamp(11px, 3vw, 12px);
-            letter-spacing: .3px;
-            text-align: center;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; font-size: clamp(11px, 3vw, 12px); letter-spacing: .3px; text-align: center;
         }
-        .quick-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            width: 100%;
-        }
+        .quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; width: 100%; }
         .quick-item {
-            padding: 16px 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all .25s;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
+            padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px;
+            border-radius: 16px; cursor: pointer; transition: all .25s;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
         }
         .quick-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2);
+            transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
-        .quick-icon {
-            font-size: clamp(22px, 6vw, 28px);
-            line-height: 1;
-            color: var(--white);
-            transition: color 0.2s;
-        }
-        .quick-item:hover .quick-icon {
-            color: var(--purple);
-        }
-        .stars {
-            position: fixed;
-            inset: 0;
-            z-index: 3;
-            pointer-events: none;
-        }
+        .quick-icon { font-size: clamp(22px, 6vw, 28px); color: var(--white); transition: color 0.2s; }
+        .quick-item:hover .quick-icon { color: var(--purple); }
+        .stars { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
         .star {
-            position: absolute;
-            border-radius: 50%;
-            background: white;
-            animation: twinkle var(--d, 3s) ease-in-out infinite;
-            will-change: opacity;
+            position: absolute; border-radius: 50%; background: white;
+            animation: twinkle var(--d,3s) ease-in-out infinite;
         }
-        @keyframes twinkle {
-            0%,
-            100% {
-                opacity: var(--a, .6)
-            }
-            50% {
-                opacity: var(--b, .1)
-            }
-        }
-        .particles {
-            position: fixed;
-            inset: 0;
-            z-index: 3;
-            pointer-events: none;
-        }
+        @keyframes twinkle { 0%,100% { opacity: var(--a,.6) } 50% { opacity: var(--b,.1) } }
+        .particles { position: fixed; inset: 0; z-index: 3; pointer-events: none; }
         .particle {
-            position: absolute;
-            border-radius: 50%;
-            animation: float var(--d, 8s) ease-in-out infinite;
+            position: absolute; border-radius: 50%;
+            animation: float var(--d,8s) ease-in-out infinite;
             filter: blur(1px);
-            will-change: transform, opacity;
         }
         @keyframes float {
-            0%,
-            100% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0
-            }
-            10%,
-            90% {
-                opacity: 1
-            }
-            50% {
-                transform: translateY(-60px) rotate(180deg)
-            }
+            0%,100% { transform: translateY(0) rotate(0deg); opacity: 0 }
+            10%,90% { opacity: 1 }
+            50% { transform: translateY(-60px) rotate(180deg) }
         }
 
         /* 足球游戏卡片 */
@@ -327,25 +171,16 @@
             font-size: 22px;
             font-weight: 600;
         }
-        .score-red {
-            color: #f87171;
-            text-shadow: 0 0 10px rgba(248, 113, 113, 0.5);
-        }
-        .score-blue {
-            color: #60a5fa;
-            text-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
-        }
-        .score-divider {
-            color: var(--muted);
-            font-size: 16px;
-        }
+        .score-red { color: #f87171; text-shadow: 0 0 10px rgba(248,113,113,0.5); }
+        .score-blue { color: #60a5fa; text-shadow: 0 0 10px rgba(96,165,250,0.5); }
+        .score-divider { color: var(--muted); font-size: 16px; }
         .canvas-container {
             position: relative;
             border-radius: 12px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
-            box-shadow: 0 0 20px rgba(167, 139, 250, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(167,139,250,0.15);
+            border: 1px solid rgba(255,255,255,0.1);
             width: 100%;
             max-width: 440px;
             aspect-ratio: 5 / 3;
@@ -363,710 +198,607 @@
             text-align: center;
             min-height: 16px;
         }
-
-        @media (max-width: 768px) {
-            .page {
-                padding: 12px 10px 24px;
-                gap: 12px;
-            }
-            .topnav {
-                padding: 14px 10px;
-            }
-            .logo {
-                font-size: 28px;
-            }
-            .clock-card {
-                padding: 20px 12px;
-            }
-            .avatar-clock {
-                width: 100px;
-                height: 100px;
-            }
-            .hitokoto {
-                padding: 12px 2px;
-            }
-            .ht-item {
-                font-size: 16px;
-            }
-            .quick-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 6px;
-            }
-            .quick-item {
-                padding: 12px 4px;
-                border-radius: 12px;
-            }
-            .quick-label {
-                font-size: 10px;
-            }
-            .football-card {
-                padding: 14px;
-            }
-            .canvas-container {
-                max-width: 340px;
-            }
-            .scoreboard {
-                font-size: 18px;
-                gap: 10px;
-            }
-        }
-        @media (max-width: 480px) {
-            .page {
-                padding: 8px 6px 20px;
-                gap: 10px;
-            }
-            .logo {
-                font-size: 24px;
-            }
-            .avatar-clock {
-                width: 80px;
-                height: 80px;
-            }
-            .digital-time {
-                font-size: 22px;
-            }
-            .ht-item {
-                font-size: 15px;
-            }
-            .quick-item {
-                padding: 10px 2px;
-            }
-            .quick-icon {
-                font-size: 20px;
-            }
-            .canvas-container {
-                max-width: 290px;
-            }
-            .scoreboard {
-                font-size: 16px;
-                gap: 8px;
-            }
-        }
     </style>
 </head>
 <body>
-    <div class="custom-bg-layer" id="customBgLayer"></div>
-    <div class="bg-scene" id="defaultBgScene">
-        <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-            <defs>
-                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#1a0f3c" />
-                    <stop offset="25%" stop-color="#2d1057" />
-                    <stop offset="45%" stop-color="#5b1f7a" />
-                    <stop offset="60%" stop-color="#b44fa8" />
-                    <stop offset="75%" stop-color="#e8875a" />
-                    <stop offset="88%" stop-color="#f2b96a" />
-                    <stop offset="100%" stop-color="#c06030" />
-                </linearGradient>
-                <filter id="glow"><feGaussianBlur stdDeviation="3" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter>
-            </defs>
-            <rect width="1600" height="900" fill="url(#sky)" />
-            <circle cx="1350" cy="95" r="38" fill="#fff5e0" opacity=".95" filter="url(#glow)" />
-        </svg>
-    </div>
-    <div class="aurora"></div>
-    <div class="noise"></div>
-    <div class="stars" id="stars"></div>
-    <div class="particles" id="particles"></div>
+<div class="custom-bg-layer" id="customBgLayer"></div>
+<div class="bg-scene" id="defaultBgScene">
+    <svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a0f3c"/><stop offset="100%" stop-color="#5b1f7a"/></linearGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="3"/><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <rect width="1600" height="900" fill="url(#sky)"/>
+    </svg>
+</div>
+<div class="aurora"></div>
+<div class="noise"></div>
+<div class="stars" id="stars"></div>
+<div class="particles" id="particles"></div>
 
-    <div class="page">
-        <nav class="glass topnav">
-            <div class="logo" id="logoDisplay">Yukecil</div>
-        </nav>
+<div class="page">
+    <nav class="glass topnav">
+        <div class="logo" id="logoDisplay">Yukecil</div>
+    </nav>
 
-        <div class="main-grid">
-            <div class="glass clock-card">
-                <div class="avatar-clock" id="avatarContainer">
-                    <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a78bfa'/%3E%3Cstop offset='100%25' stop-color='%23f4a0c8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23g)'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='48' font-family='Arial' font-weight='bold'%3EY%3C/text%3E%3C/svg%3E" alt="头像">
+    <div class="main-grid">
+        <div class="glass clock-card">
+            <div class="avatar-clock"><img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23a78bfa'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='48'%3EY%3C/text%3E%3C/svg%3E"></div>
+            <div class="digital-time" id="digiTime">00:00:00</div>
+            <div class="clock-date" id="clockDate">加载中...</div>
+            <div class="hitokoto" id="hitokotoBox"><div class="hitokoto-text"><span class="ht-item active" id="htItem1">正在加载一言...</span><span class="ht-item" id="htItem2"></span></div></div>
+            <div class="glass" style="padding:12px; margin-top:8px;">
+                <div class="quick-grid">
+                    <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'"><span class="quick-icon"><i class="fa-solid fa-envelope"></i></span><span class="quick-label">邮箱</span></div>
+                    <div class="quick-item" id="contactTelegram" onclick="window.open('https://t.me/yourname')"><span class="quick-icon"><i class="fa-brands fa-telegram"></i></span><span class="quick-label">Telegram</span></div>
                 </div>
-                <div class="digital-time" id="digiTime">00:00:00</div>
-                <div class="clock-date" id="clockDate">加载中...</div>
-                <div class="hitokoto" id="hitokotoBox">
-                    <div class="hitokoto-text" id="hitokotoWrapper">
-                        <span class="ht-item active" id="htItem1">正在加载一言...</span>
-                        <span class="ht-item" id="htItem2"></span>
-                    </div>
-                </div>
-                <div class="glass" style="padding:12px; margin-top:8px;">
-                    <div class="quick-grid">
-                        <div class="quick-item" id="contactEmail" onclick="window.location.href='mailto:hello@example.com'">
-                            <span class="quick-icon"><i class="fa-solid fa-envelope"></i></span>
-                            <span class="quick-label">邮箱</span>
-                        </div>
-                        <div class="quick-item" id="contactTelegram" onclick="window.open('https://t.me/yourname')">
-                            <span class="quick-icon"><i class="fa-brands fa-telegram"></i></span>
-                            <span class="quick-label">Telegram</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ⚽ 自动足球对决 -->
-            <div class="glass football-card">
-                <div class="scoreboard">
-                    <span class="score-red" id="scoreRed">0</span>
-                    <span class="score-divider">:</span>
-                    <span class="score-blue" id="scoreBlue">0</span>
-                </div>
-                <div class="canvas-container">
-                    <canvas id="footballCanvas" width="440" height="264"></canvas>
-                </div>
-                <div class="game-status" id="footballStatus">⚽ 比赛进行中...</div>
             </div>
         </div>
+
+        <!-- ⚽ 11人制自动足球模拟 -->
+        <div class="glass football-card">
+            <div class="scoreboard">
+                <span class="score-red" id="scoreRed">0</span>
+                <span class="score-divider">:</span>
+                <span class="score-blue" id="scoreBlue">0</span>
+            </div>
+            <div class="canvas-container">
+                <canvas id="footballCanvas" width="440" height="264"></canvas>
+            </div>
+            <div class="game-status" id="footballStatus">⚽ 比赛进行中...</div>
+        </div>
     </div>
+</div>
 
-    <script>
-        // --- 现有设置和特效 ---
-        const settings = {
-            name: localStorage.getItem('userName') || 'Yukecil',
-            email: localStorage.getItem('userEmail') || 'hello@example.com',
-            telegram: localStorage.getItem('userTelegram') || '@yourname',
-            avatar: localStorage.getItem('userAvatar') || '',
-            bgMobile: localStorage.getItem('bgMobile') || '',
-            bgDesktop: localStorage.getItem('bgDesktop') || '',
-            hitokoto: localStorage.getItem('hitokotoEnabled') !== 'false',
-            particles: localStorage.getItem('particlesEnabled') !== 'false',
-            stars: localStorage.getItem('starsEnabled') !== 'false'
-        };
+<script>
+// --- 现有设置和特效 (保持不变) ---
+const settings = {
+    name: localStorage.getItem('userName') || 'Yukecil',
+    email: localStorage.getItem('userEmail') || 'hello@example.com',
+    telegram: localStorage.getItem('userTelegram') || '@yourname',
+    avatar: localStorage.getItem('userAvatar') || '',
+    bgMobile: localStorage.getItem('bgMobile') || '',
+    bgDesktop: localStorage.getItem('bgDesktop') || '',
+    hitokoto: localStorage.getItem('hitokotoEnabled') !== 'false',
+    particles: localStorage.getItem('particlesEnabled') !== 'false',
+    stars: localStorage.getItem('starsEnabled') !== 'false'
+};
 
-        function applySettings() {
-            document.getElementById('logoDisplay').textContent = settings.name;
-            if (settings.avatar) document.getElementById('avatarImg').src = settings.avatar;
-            const emailEl = document.getElementById('contactEmail');
-            emailEl.setAttribute('onclick', `window.location.href='mailto:${settings.email}'`);
-            const tgEl = document.getElementById('contactTelegram');
-            const tgUsername = settings.telegram.startsWith('@') ? settings.telegram.substring(1) : settings
-            .telegram;
-            tgEl.setAttribute('onclick', `window.open('https://t.me/${tgUsername}')`);
-            document.getElementById('hitokotoBox').style.display = settings.hitokoto ? '' : 'none';
-            initParticles();
-            initStars();
-            applyBackgrounds();
+function applySettings() {
+    document.getElementById('logoDisplay').textContent = settings.name;
+    if(settings.avatar) document.getElementById('avatarImg').src = settings.avatar;
+    const emailEl = document.getElementById('contactEmail');
+    emailEl.setAttribute('onclick', `window.location.href='mailto:${settings.email}'`);
+    const tgEl = document.getElementById('contactTelegram');
+    const tgUsername = settings.telegram.startsWith('@') ? settings.telegram.substring(1) : settings.telegram;
+    tgEl.setAttribute('onclick', `window.open('https://t.me/${tgUsername}')`);
+    document.getElementById('hitokotoBox').style.display = settings.hitokoto ? '' : 'none';
+    initParticles();
+    initStars();
+    applyBackgrounds();
+}
+
+function applyBackgrounds() {
+    const isMobile = window.innerWidth <= 768;
+    const bgUrl = isMobile ? settings.bgMobile : settings.bgDesktop;
+    const customBg = document.getElementById('customBgLayer');
+    const defaultBg = document.getElementById('defaultBgScene');
+    if(bgUrl) {
+        customBg.style.backgroundImage = `url(${bgUrl})`;
+        customBg.classList.add('active');
+        defaultBg.style.opacity = '0';
+    } else {
+        customBg.classList.remove('active');
+        defaultBg.style.opacity = '1';
+    }
+}
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(applyBackgrounds, 200);
+});
+
+function initParticles() {
+    const container = document.getElementById('particles');
+    if(!settings.particles) { container.innerHTML = ''; return; }
+    if(container.children.length > 0) return;
+    const colors=['rgba(167,139,250,','rgba(244,160,200,','rgba(96,165,250,','rgba(251,191,36,'];
+    for(let i=0;i<8;i++){
+        const p=document.createElement('div'); p.className='particle';
+        const sz=Math.random()*3+1;
+        const col=colors[Math.floor(Math.random()*colors.length)];
+        p.style.cssText=`width:${sz}px;height:${sz}px;background:${col}0.6);top:${Math.random()*80+10}%;left:${Math.random()*90+5}%;--d:${(Math.random()*6+6).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+        container.appendChild(p);
+    }
+}
+
+function initStars() {
+    const container = document.getElementById('stars');
+    if(!settings.stars) { container.innerHTML = ''; return; }
+    if(container.children.length > 0) return;
+    for(let i=0;i<40;i++){
+        const s=document.createElement('div'); s.className='star';
+        const sz=Math.random()*1.5+.5;
+        s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--a:${Math.random()*.8+.2};--b:${Math.random()*.15};--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
+        container.appendChild(s);
+    }
+}
+
+const weekDays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+function pad(n){return String(n).padStart(2,'0');}
+function updateClock(){
+    const now = new Date();
+    document.getElementById('digiTime').textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    document.getElementById('clockDate').textContent = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${weekDays[now.getDay()]}`;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+let activeIndex = 1;
+const item1 = document.getElementById('htItem1');
+const item2 = document.getElementById('htItem2');
+function switchHitokoto(text) {
+    const current = activeIndex === 1 ? item1 : item2;
+    const next = activeIndex === 1 ? item2 : item1;
+    next.textContent = text;
+    current.classList.remove('active');
+    next.classList.add('active');
+    activeIndex = activeIndex === 1 ? 2 : 1;
+}
+let lastHitokoto = '';
+async function fetchHitokoto() {
+    try {
+        const res = await fetch('https://v1.hitokoto.cn');
+        const data = await res.json();
+        if (data?.hitokoto && data.hitokoto !== lastHitokoto) {
+            lastHitokoto = data.hitokoto;
+            switchHitokoto(`「${data.hitokoto}」`);
         }
+    } catch (e) {}
+}
+fetchHitokoto();
+window.hitokotoInterval = setInterval(fetchHitokoto, 30000);
 
-        function applyBackgrounds() {
-            const isMobile = window.innerWidth <= 768;
-            const bgUrl = isMobile ? settings.bgMobile : settings.bgDesktop;
-            const customBg = document.getElementById('customBgLayer');
-            const defaultBg = document.getElementById('defaultBgScene');
-            if (bgUrl) {
-                customBg.style.backgroundImage = `url(${bgUrl})`;
-                customBg.classList.add('active');
-                defaultBg.style.opacity = '0';
-            } else {
-                customBg.classList.remove('active');
-                defaultBg.style.opacity = '1';
-            }
+initStars();
+initParticles();
+applySettings();
+
+// 云端配置加载 (保持原样)
+const BIN_ID = '6a2a15f7da38895dfeaa9630';
+const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
+
+async function loadCloudConfig() {
+    try {
+        const res = await fetch(BIN_URL, { headers: { 'X-Master-Key': API_KEY } });
+        const json = await res.json();
+        const data = json.record;
+        if (data.title) settings.name = data.title;
+        if (data.email) settings.email = data.email;
+        if (data.telegram) settings.telegram = data.telegram;
+        if (data.avatar) settings.avatar = data.avatar;
+        if (data.bgMobile) settings.bgMobile = data.bgMobile;
+        if (data.bgDesktop) settings.bgDesktop = data.bgDesktop;
+        if (data.hitokotoEnabled !== undefined) settings.hitokoto = data.hitokotoEnabled;
+        if (data.particlesEnabled !== undefined) settings.particles = data.particlesEnabled;
+        if (data.starsEnabled !== undefined) settings.stars = data.starsEnabled;
+        if (data.text && data.text.trim() !== '') {
+            document.getElementById('htItem1').textContent = data.text;
+            document.getElementById('htItem1').classList.add('active');
+            document.getElementById('htItem2').classList.remove('active');
+            if (window.hitokotoInterval) { clearInterval(window.hitokotoInterval); window.hitokotoInterval = null; }
         }
-
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(applyBackgrounds, 200);
-        });
-
-        function initParticles() {
-            const container = document.getElementById('particles');
-            if (!settings.particles) { container.innerHTML = '';
-                return; }
-            if (container.children.length > 0) return;
-            const colors = ['rgba(167,139,250,', 'rgba(244,160,200,', 'rgba(96,165,250,', 'rgba(251,191,36,'];
-            for (let i = 0; i < 8; i++) {
-                const p = document.createElement('div');
-                p.className = 'particle';
-                const sz = Math.random() * 3 + 1;
-                const col = colors[Math.floor(Math.random() * colors.length)];
-                p.style.cssText =
-                    `width:${sz}px;height:${sz}px;background:${col}0.6);top:${Math.random()*80+10}%;left:${Math.random()*90+5}%;--d:${(Math.random()*6+6).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
-                container.appendChild(p);
-            }
-        }
-
-        function initStars() {
-            const container = document.getElementById('stars');
-            if (!settings.stars) { container.innerHTML = '';
-                return; }
-            if (container.children.length > 0) return;
-            for (let i = 0; i < 40; i++) {
-                const s = document.createElement('div');
-                s.className = 'star';
-                const sz = Math.random() * 1.5 + .5;
-                s.style.cssText =
-                    `width:${sz}px;height:${sz}px;top:${Math.random()*55}%;left:${Math.random()*100}%;--a:${Math.random()*.8+.2};--b:${Math.random()*.15};--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s`;
-                container.appendChild(s);
-            }
-        }
-
-        const weekDays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-
-        function pad(n) { return String(n).padStart(2, '0'); }
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('digiTime').textContent =
-                `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
-            document.getElementById('clockDate').textContent =
-                `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${weekDays[now.getDay()]}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-
-        let activeIndex = 1;
-        const item1 = document.getElementById('htItem1');
-        const item2 = document.getElementById('htItem2');
-
-        function switchHitokoto(text) {
-            const current = activeIndex === 1 ? item1 : item2;
-            const next = activeIndex === 1 ? item2 : item1;
-            next.textContent = text;
-            current.classList.remove('active');
-            next.classList.add('active');
-            activeIndex = activeIndex === 1 ? 2 : 1;
-        }
-        let lastHitokoto = '';
-        async function fetchHitokoto() {
-            try {
-                const res = await fetch('https://v1.hitokoto.cn');
-                const data = await res.json();
-                if (data?.hitokoto && data.hitokoto !== lastHitokoto) {
-                    lastHitokoto = data.hitokoto;
-                    switchHitokoto(`「${data.hitokoto}」`);
-                }
-            } catch (e) {}
-        }
-        fetchHitokoto();
-        window.hitokotoInterval = setInterval(fetchHitokoto, 30000);
-
-        initStars();
-        initParticles();
         applySettings();
+    } catch (e) {}
+}
+loadCloudConfig();
 
-        // --- 云端配置加载 ---
-        const BIN_ID = '6a2a15f7da38895dfeaa9630';
-        const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
-        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
+// --- ⚽ 11人制自动足球模拟游戏 ---
+(function() {
+    const canvas = document.getElementById('footballCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = 440, H = 264;
+    const statusDiv = document.getElementById('footballStatus');
+    const scoreRedEl = document.getElementById('scoreRed');
+    const scoreBlueEl = document.getElementById('scoreBlue');
 
-        async function loadCloudConfig() {
-            try {
-                const res = await fetch(BIN_URL, { headers: { 'X-Master-Key': API_KEY } });
-                const json = await res.json();
-                const data = json.record;
-                if (data.title !== undefined) localStorage.setItem('userName', data.title);
-                if (data.email !== undefined) localStorage.setItem('userEmail', data.email);
-                if (data.telegram !== undefined) localStorage.setItem('userTelegram', data.telegram);
-                if (data.avatar !== undefined) localStorage.setItem('userAvatar', data.avatar);
-                if (data.bgMobile !== undefined) localStorage.setItem('bgMobile', data.bgMobile);
-                if (data.bgDesktop !== undefined) localStorage.setItem('bgDesktop', data.bgDesktop);
-                if (data.hitokotoEnabled !== undefined) localStorage.setItem('hitokotoEnabled', data.hitokotoEnabled);
-                if (data.particlesEnabled !== undefined) localStorage.setItem('particlesEnabled', data
-            .particlesEnabled);
-                if (data.starsEnabled !== undefined) localStorage.setItem('starsEnabled', data.starsEnabled);
+    // 球场尺寸参数
+    const GOAL_Y_MIN = H * 0.32;
+    const GOAL_Y_MAX = H * 0.68;
+    const GOAL_DEPTH = 10;
+    const PLAYER_SIZE = 8;
+    const BALL_SIZE = 6;
+    const MAX_SPEED = 75;       // 最大移动速度 px/s
+    const KICK_POWER = 160;     // 踢球初速
+    const PASS_POWER = 130;     // 传球初速
+    const FRICTION = 70;        // 球减速
+    const PLAYER_COUNT = 11;    // 每队人数
 
-                settings.name = data.title || settings.name;
-                settings.email = data.email || settings.email;
-                settings.telegram = data.telegram || settings.telegram;
-                settings.avatar = data.avatar !== undefined ? data.avatar : settings.avatar;
-                settings.bgMobile = data.bgMobile !== undefined ? data.bgMobile : settings.bgMobile;
-                settings.bgDesktop = data.bgDesktop !== undefined ? data.bgDesktop : settings.bgDesktop;
-                settings.hitokoto = data.hitokotoEnabled !== undefined ? data.hitokotoEnabled : settings.hitokoto;
-                settings.particles = data.particlesEnabled !== undefined ? data.particlesEnabled : settings.particles;
-                settings.stars = data.starsEnabled !== undefined ? data.starsEnabled : settings.stars;
+    let scoreRed = 0, scoreBlue = 0;
+    let players = [];           // { x, y, team: 'red'|'blue', role: 'field'|'goalie' }
+    let ball = { x: W/2, y: H/2, vx: 0, vy: 0 };
+    let ballCarrier = null;    // 持球球员索引，null表示球自由
+    let goalParticles = [];
+    let goalFlash = 0;
+    let lastTime = performance.now();
 
-                applySettings();
+    function resetMatch() {
+        players = [];
+        // 红队 (左侧，进攻右球门)
+        for (let i = 0; i < PLAYER_COUNT; i++) {
+            const isGoalie = (i === 0);
+            players.push({
+                x: 60 + Math.random() * 80,
+                y: isGoalie ? H/2 : 30 + Math.random() * (H-60),
+                team: 'red',
+                role: isGoalie ? 'goalie' : 'field',
+                targetX: 0, targetY: 0,
+                cooldown: 0
+            });
+        }
+        // 蓝队 (右侧，进攻左球门)
+        for (let i = 0; i < PLAYER_COUNT; i++) {
+            const isGoalie = (i === 0);
+            players.push({
+                x: W - 60 - Math.random() * 80,
+                y: isGoalie ? H/2 : 30 + Math.random() * (H-60),
+                team: 'blue',
+                role: isGoalie ? 'goalie' : 'field',
+                targetX: 0, targetY: 0,
+                cooldown: 0
+            });
+        }
+        ball = { x: W/2, y: H/2, vx: (Math.random()-0.5)*30, vy: (Math.random()-0.5)*30 };
+        ballCarrier = null;
+        goalParticles = [];
+        goalFlash = 0;
+        statusDiv.textContent = '⚽ 比赛进行中...';
+    }
 
-                if (data.text && data.text.trim() !== '') {
-                    document.getElementById('htItem1').textContent = data.text;
-                    document.getElementById('htItem1').classList.add('active');
-                    document.getElementById('htItem2').classList.remove('active');
-                    if (window.hitokotoInterval) {
-                        clearInterval(window.hitokotoInterval);
-                        window.hitokotoInterval = null;
-                    }
+    function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
+    function dist(a, b) { const dx = a.x-b.x, dy = a.y-b.y; return Math.sqrt(dx*dx+dy*dy); }
+
+    function getTeamPlayers(team) { return players.filter(p => p.team === team); }
+    function getFieldPlayers(team) { return players.filter(p => p.team === team && p.role === 'field'); }
+    function getGoalie(team) { return players.find(p => p.team === team && p.role === 'goalie'); }
+
+    function aiUpdate(dt, now) {
+        const redPlayers = getFieldPlayers('red');
+        const bluePlayers = getFieldPlayers('blue');
+        const redGoalie = getGoalie('red');
+        const blueGoalie = getGoalie('blue');
+
+        // 守门员移动：在球门线附近跟随球的y坐标
+        if (redGoalie) {
+            redGoalie.targetY = clamp(ball.y, GOAL_Y_MIN + 10, GOAL_Y_MAX - 10);
+            redGoalie.x = 12;
+        }
+        if (blueGoalie) {
+            blueGoalie.targetY = clamp(ball.y, GOAL_Y_MIN + 10, GOAL_Y_MAX - 10);
+            blueGoalie.x = W - 12;
+        }
+
+        // 确定球权
+        if (ballCarrier === null) {
+            // 寻找最近球员夺取球权
+            let closestDist = 14;
+            let closestIdx = -1;
+            for (let i = 0; i < players.length; i++) {
+                const p = players[i];
+                if (p.role === 'goalie') continue; // 守门员不主动拿球（除非球在禁区内）
+                const d = dist(p, ball);
+                if (d < closestDist) {
+                    closestDist = d;
+                    closestIdx = i;
                 }
-            } catch (e) {
-                console.error('云端同步失败', e);
+            }
+            if (closestIdx !== -1) {
+                ballCarrier = closestIdx;
+                ball.vx = 0; ball.vy = 0;
             }
         }
-        loadCloudConfig();
 
-        // --- ⚽ 自动足球对决游戏 ---
-        (function() {
-            const canvas = document.getElementById('footballCanvas');
-            const ctx = canvas.getContext('2d');
-            const W = canvas.width;
-            const H = canvas.height;
-            const statusDiv = document.getElementById('footballStatus');
-            const scoreRedEl = document.getElementById('scoreRed');
-            const scoreBlueEl = document.getElementById('scoreBlue');
+        // 有球球员处理
+        if (ballCarrier !== null) {
+            const carrier = players[ballCarrier];
+            ball.x = carrier.x;
+            ball.y = carrier.y - 4; // 球在脚下
+            ball.vx = 0; ball.vy = 0;
 
-            // 比分
-            let scoreRed = 0;
-            let scoreBlue = 0;
+            const isRed = carrier.team === 'red';
+            const opponentGoalX = isRed ? W : 0;
+            const ownGoalX = isRed ? 0 : W;
+            const teammates = isRed ? redPlayers : bluePlayers;
+            const opponents = isRed ? bluePlayers : redPlayers;
 
-            // 球门参数
-            const GOAL_Y_MIN = H * 0.32;
-            const GOAL_Y_MAX = H * 0.68;
-            const GOAL_DEPTH = 8;
-
-            // 球员
-            const PLAYER_SIZE = 12;
-            const PLAYER_SPEED = 110; // px/s
-            const BALL_SIZE = 8;
-            const KICK_SPEED = 220; // px/s
-            const FRICTION = 90; // px/s² 减速度
-            const KICK_COOLDOWN = 0.55; // 秒
-
-            // 红方（左边，进攻右球门）
-            let playerRed = { x: 80, y: H / 2, lastKick: 0 };
-            // 蓝方（右边，进攻左球门）
-            let playerBlue = { x: W - 80, y: H / 2, lastKick: 0 };
-            // 球
-            let ball = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
-
-            // 进球粒子
-            let goalParticles = [];
-            let goalFlash = 0;
-
-            // 游戏状态
-            let paused = false;
-            let pauseUntil = 0;
-
-            function resetMatch() {
-                playerRed.x = 80;
-                playerRed.y = H / 2;
-                playerRed.lastKick = 0;
-                playerBlue.x = W - 80;
-                playerBlue.y = H / 2;
-                playerBlue.lastKick = 0;
-                ball.x = W / 2;
-                ball.y = H / 2;
-                ball.vx = (Math.random() - 0.5) * 40;
-                ball.vy = (Math.random() - 0.5) * 40;
-                goalParticles = [];
-                goalFlash = 0;
-                paused = false;
-                statusDiv.textContent = '⚽ 比赛进行中...';
-            }
-
-            function spawnGoalParticles(x, y, color) {
-                for (let i = 0; i < 30; i++) {
-                    const angle = Math.random() * Math.PI * 2;
-                    const speed = 60 + Math.random() * 180;
-                    goalParticles.push({
-                        x,
-                        y,
-                        vx: Math.cos(angle) * speed,
-                        vy: Math.sin(angle) * speed,
-                        life: 1.0,
-                        decay: 0.6 + Math.random() * 1.2,
-                        size: 2 + Math.random() * 5,
-                        color
-                    });
+            // 防守压力：最近对手距离
+            let nearestOppDist = Infinity;
+            let nearestOpp = null;
+            for (let opp of opponents) {
+                const d = dist(carrier, opp);
+                if (d < nearestOppDist) {
+                    nearestOppDist = d;
+                    nearestOpp = opp;
                 }
             }
 
-            function goalScored(scorer) {
-                if (scorer === 'red') {
-                    scoreRed++;
-                    scoreRedEl.textContent = scoreRed;
-                    spawnGoalParticles(ball.x, ball.y, '#f87171');
-                    statusDiv.textContent = '🔴 红方进球！';
+            // 射门决策：距离球门<120px 且 防守压力不太大
+            const distToGoal = Math.abs(carrier.x - opponentGoalX);
+            if (distToGoal < 120 && Math.random() < 0.015 && carrier.cooldown <= 0) {
+                // 射门！
+                const goalY = GOAL_Y_MIN + Math.random() * (GOAL_Y_MAX - GOAL_Y_MIN);
+                const angle = Math.atan2(goalY - carrier.y, opponentGoalX - carrier.x);
+                ball.vx = Math.cos(angle) * KICK_POWER;
+                ball.vy = Math.sin(angle) * KICK_POWER;
+                ball.x = carrier.x;
+                ball.y = carrier.y;
+                ballCarrier = null;
+                carrier.cooldown = 0.6;
+            }
+            // 传球决策：有队友在更好位置且压力较大
+            else if (nearestOppDist < 40 && teammates.length > 1 && Math.random() < 0.02 && carrier.cooldown <= 0) {
+                let bestTeammate = null;
+                let bestScore = -Infinity;
+                for (let tm of teammates) {
+                    if (tm === carrier) continue;
+                    const distToTm = dist(carrier, tm);
+                    const forwardBonus = isRed ? (tm.x - carrier.x) : (carrier.x - tm.x);
+                    const score = forwardBonus * 2 - distToTm;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        bestTeammate = tm;
+                    }
+                }
+                if (bestTeammate) {
+                    const angle = Math.atan2(bestTeammate.y - carrier.y, bestTeammate.x - carrier.x);
+                    ball.vx = Math.cos(angle) * PASS_POWER;
+                    ball.vy = Math.sin(angle) * PASS_POWER;
+                    ball.x = carrier.x;
+                    ball.y = carrier.y;
+                    ballCarrier = null;
+                    carrier.cooldown = 0.5;
+                }
+            }
+            // 带球移动：向对方球门前进
+            else {
+                carrier.targetX = opponentGoalX;
+                carrier.targetY = clamp(carrier.y + (Math.random()-0.5)*30, 30, H-30);
+            }
+        }
+
+        // 无球球员移动（AI跑位）
+        for (let p of players) {
+            if (p.role === 'goalie') continue;
+            if (ballCarrier !== null && players[ballCarrier] === p) continue; // 持球者由上面处理
+
+            const isRed = p.team === 'red';
+            const opponentGoalX = isRed ? W : 0;
+            const ownGoalX = isRed ? 0 : W;
+
+            // 进攻跑位：向前场移动，倾向于靠近球但保持距离
+            if (p.team === (ballCarrier !== null ? players[ballCarrier].team : (ball.x > W/2 ? 'blue' : 'red'))) {
+                // 我方控球或球在前场
+                p.targetX = opponentGoalX + (Math.random()-0.5)*80;
+                p.targetY = clamp(ball.y + (Math.random()-0.5)*60, 25, H-25);
+            } else {
+                // 防守站位：在本方半场，盯防对方球员或球
+                p.targetX = ownGoalX + (Math.random()*100 + 30) * (isRed?1:-1);
+                p.targetY = clamp(ball.y + (Math.random()-0.5)*50, 25, H-25);
+            }
+        }
+
+        // 移动所有球员
+        for (let p of players) {
+            if (p.cooldown > 0) p.cooldown -= dt;
+            const dx = p.targetX - p.x;
+            const dy = p.targetY - p.y;
+            const d = Math.sqrt(dx*dx+dy*dy);
+            if (d > 2) {
+                const speed = p.role === 'goalie' ? MAX_SPEED * 0.9 : MAX_SPEED;
+                const moveX = (dx/d) * speed * dt;
+                const moveY = (dy/d) * speed * dt;
+                p.x += moveX;
+                p.y += moveY;
+            }
+            // 边界限制
+            p.x = clamp(p.x, 8, W-8);
+            p.y = clamp(p.y, 8, H-8);
+            // 守门员限制在禁区内
+            if (p.role === 'goalie') {
+                if (p.team === 'red') p.x = clamp(p.x, 4, 30);
+                else p.x = clamp(p.x, W-30, W-4);
+                p.y = clamp(p.y, GOAL_Y_MIN, GOAL_Y_MAX);
+            }
+        }
+
+        // 球物理更新（如果没有持球者）
+        if (ballCarrier === null) {
+            // 摩擦力
+            const speed = Math.sqrt(ball.vx*ball.vx + ball.vy*ball.vy);
+            if (speed > 0) {
+                const friction = FRICTION * dt;
+                if (friction >= speed) { ball.vx = 0; ball.vy = 0; }
+                else { ball.vx *= (speed - friction)/speed; ball.vy *= (speed - friction)/speed; }
+            }
+            ball.x += ball.vx * dt;
+            ball.y += ball.vy * dt;
+
+            // 边界反弹
+            if (ball.y < BALL_SIZE) { ball.y = BALL_SIZE; ball.vy = Math.abs(ball.vy)*0.5; }
+            if (ball.y > H - BALL_SIZE) { ball.y = H - BALL_SIZE; ball.vy = -Math.abs(ball.vy)*0.5; }
+
+            // 进球检测
+            if (ball.x < BALL_SIZE) {
+                if (ball.y > GOAL_Y_MIN && ball.y < GOAL_Y_MAX) {
+                    goalScored('blue');
+                    return;
                 } else {
-                    scoreBlue++;
-                    scoreBlueEl.textContent = scoreBlue;
-                    spawnGoalParticles(ball.x, ball.y, '#60a5fa');
-                    statusDiv.textContent = '🔵 蓝方进球！';
+                    ball.x = BALL_SIZE;
+                    ball.vx = Math.abs(ball.vx)*0.4;
                 }
-                goalFlash = 1.0;
-                paused = true;
-                pauseUntil = performance.now() / 1000 + 1.8;
-                // 重置位置
-                playerRed.x = 80;
-                playerRed.y = H / 2;
-                playerRed.lastKick = 0;
-                playerBlue.x = W - 80;
-                playerBlue.y = H / 2;
-                playerBlue.lastKick = 0;
-                ball.x = W / 2;
-                ball.y = H / 2;
-                ball.vx = (Math.random() - 0.5) * 50;
-                ball.vy = (Math.random() - 0.5) * 50;
             }
-
-            function clamp(val, min, max) { return Math.max(min, Math.min(max, val)); }
-
-            function dist(a, b) {
-                const dx = a.x - b.x;
-                const dy = a.y - b.y;
-                return Math.sqrt(dx * dx + dy * dy);
-            }
-
-            function aiMove(player, ballRef, opponentGoalX, ownGoalX, now) {
-                const d = dist(player, ballRef);
-                const targetX = ballRef.x;
-                const targetY = ballRef.y;
-
-                // 追球
-                let moveX = targetX - player.x;
-                let moveY = targetY - player.y;
-                const moveDist = Math.sqrt(moveX * moveX + moveY * moveY);
-
-                if (moveDist > 1) {
-                    const normX = moveX / moveDist;
-                    const normY = moveY / moveDist;
-                    const speed = PLAYER_SPEED;
-                    player.x += normX * speed * (1 / 60);
-                    player.y += normY * speed * (1 / 60);
-                }
-
-                // 限制在场地内
-                player.x = clamp(player.x, PLAYER_SIZE, W - PLAYER_SIZE);
-                player.y = clamp(player.y, PLAYER_SIZE, H - PLAYER_SIZE);
-
-                // 踢球
-                if (d < PLAYER_SIZE + BALL_SIZE + 4 && now - player.lastKick > KICK_COOLDOWN) {
-                    player.lastKick = now;
-                    // 踢向对方球门
-                    const goalCX = opponentGoalX;
-                    const goalCY = (GOAL_Y_MIN + GOAL_Y_MAX) / 2 + (Math.random() - 0.5) * 50;
-                    let kx = goalCX - ballRef.x;
-                    let ky = goalCY - ballRef.y;
-                    const kDist = Math.sqrt(kx * kx + ky * ky);
-                    if (kDist > 0) {
-                        // 加随机偏移
-                        const angle = Math.atan2(ky, kx) + (Math.random() - 0.5) * 0.5;
-                        ballRef.vx = Math.cos(angle) * KICK_SPEED;
-                        ballRef.vy = Math.sin(angle) * KICK_SPEED;
-                    }
+            if (ball.x > W - BALL_SIZE) {
+                if (ball.y > GOAL_Y_MIN && ball.y < GOAL_Y_MAX) {
+                    goalScored('red');
+                    return;
+                } else {
+                    ball.x = W - BALL_SIZE;
+                    ball.vx = -Math.abs(ball.vx)*0.4;
                 }
             }
 
-            function updateBall(dt) {
-                // 摩擦力
-                const speed = Math.sqrt(ball.vx * ball.vx + ball.vy * ball.vy);
-                if (speed > 0) {
-                    const frictionForce = FRICTION * dt;
-                    if (frictionForce >= speed) {
-                        ball.vx = 0;
-                        ball.vy = 0;
-                    } else {
-                        const ratio = (speed - frictionForce) / speed;
-                        ball.vx *= ratio;
-                        ball.vy *= ratio;
-                    }
-                }
-
-                ball.x += ball.vx * dt;
-                ball.y += ball.vy * dt;
-
-                // 上下边界反弹
-                if (ball.y < BALL_SIZE) {
-                    ball.y = BALL_SIZE;
-                    ball.vy = Math.abs(ball.vy) * 0.6;
-                }
-                if (ball.y > H - BALL_SIZE) {
-                    ball.y = H - BALL_SIZE;
-                    ball.vy = -Math.abs(ball.vy) * 0.6;
-                }
-
-                // 左右球门检测
-                if (ball.x < BALL_SIZE) {
-                    if (ball.y > GOAL_Y_MIN && ball.y < GOAL_Y_MAX) {
-                        // 蓝方得分（球进入红方球门）
-                        goalScored('blue');
-                        return;
-                    } else {
-                        ball.x = BALL_SIZE;
-                        ball.vx = Math.abs(ball.vx) * 0.5;
-                    }
-                }
-                if (ball.x > W - BALL_SIZE) {
-                    if (ball.y > GOAL_Y_MIN && ball.y < GOAL_Y_MAX) {
-                        // 红方得分（球进入蓝方球门）
-                        goalScored('red');
-                        return;
-                    } else {
-                        ball.x = W - BALL_SIZE;
-                        ball.vx = -Math.abs(ball.vx) * 0.5;
-                    }
+            // 抢断：无球时，防守球员靠近球可夺球
+            for (let p of players) {
+                if (p.role === 'goalie') continue;
+                if (ballCarrier !== null) break;
+                const d = dist(p, ball);
+                if (d < 12 && Math.random() < 0.3 * dt) {
+                    ballCarrier = players.indexOf(p);
+                    ball.vx = 0; ball.vy = 0;
+                    break;
                 }
             }
+        }
+    }
 
-            function drawField() {
-                // 草地
-                ctx.fillStyle = '#2d5a1e';
-                ctx.fillRect(0, 0, W, H);
-
-                // 草地纹理
-                ctx.fillStyle = '#3a7228';
-                for (let i = 0; i < 120; i++) {
-                    const gx = (i * 137 + 53) % W;
-                    const gy = (i * 251 + 89) % H;
-                    ctx.fillRect(gx, gy, 3, 3);
-                }
-                ctx.fillStyle = '#245018';
-                for (let i = 0; i < 80; i++) {
-                    const gx = (i * 199 + 31) % W;
-                    const gy = (i * 173 + 67) % H;
-                    ctx.fillRect(gx, gy, 2, 2);
-                }
-
-                // 边线
-                ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(2, 2, W - 4, H - 4);
-
-                // 中线
-                ctx.beginPath();
-                ctx.setLineDash([8, 8]);
-                ctx.moveTo(W / 2, 2);
-                ctx.lineTo(W / 2, H - 2);
-                ctx.stroke();
-                ctx.setLineDash([]);
-
-                // 中圈
-                ctx.beginPath();
-                ctx.arc(W / 2, H / 2, 40, 0, Math.PI * 2);
-                ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // 左球门区域
-                ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(0, GOAL_Y_MIN, GOAL_DEPTH + 30, GOAL_Y_MAX - GOAL_Y_MIN);
-                // 左球门
-                ctx.fillStyle = 'rgba(255,255,255,0.15)';
-                ctx.fillRect(0, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX - GOAL_Y_MIN);
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(0, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX - GOAL_Y_MIN);
-                // 门柱
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(-2, GOAL_Y_MIN - 3, 8, 6);
-                ctx.fillRect(-2, GOAL_Y_MAX - 3, 8, 6);
-
-                // 右球门区域
-                ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-                ctx.lineWidth = 2;
-                ctx.strokeRect(W - GOAL_DEPTH - 30, GOAL_Y_MIN, GOAL_DEPTH + 30, GOAL_Y_MAX - GOAL_Y_MIN);
-                // 右球门
-                ctx.fillStyle = 'rgba(255,255,255,0.15)';
-                ctx.fillRect(W - GOAL_DEPTH, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX - GOAL_Y_MIN);
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 3;
-                ctx.strokeRect(W - GOAL_DEPTH, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX - GOAL_Y_MIN);
-                // 门柱
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(W - 6, GOAL_Y_MIN - 3, 8, 6);
-                ctx.fillRect(W - 6, GOAL_Y_MAX - 3, 8, 6);
-            }
-
-            function drawPlayer(x, y, color, isRed) {
-                // 身体
-                ctx.fillStyle = color;
-                ctx.fillRect(x - PLAYER_SIZE / 2, y - PLAYER_SIZE / 2 + 3, PLAYER_SIZE, PLAYER_SIZE - 2);
-                // 头部
-                ctx.fillStyle = '#ffd9b3';
-                ctx.fillRect(x - 5, y - PLAYER_SIZE / 2 - 3, 10, 8);
-                // 队色帽子/头带
-                ctx.fillStyle = color;
-                ctx.fillRect(x - 5, y - PLAYER_SIZE / 2 - 5, 10, 3);
-                // 眼睛
-                ctx.fillStyle = '#111';
-                ctx.fillRect(x - 3, y - PLAYER_SIZE / 2 - 1, 2, 2);
-                ctx.fillRect(x + 1, y - PLAYER_SIZE / 2 - 1, 2, 2);
-                // 腿
-                ctx.fillStyle = '#333';
-                ctx.fillRect(x - 4, y + PLAYER_SIZE / 2 - 3, 3, 5);
-                ctx.fillRect(x + 1, y + PLAYER_SIZE / 2 - 3, 3, 5);
-            }
-
-            function drawBall(x, y) {
-                // 足球
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(x - BALL_SIZE / 2, y - BALL_SIZE / 2, BALL_SIZE, BALL_SIZE);
-                // 黑色五边形斑块
-                ctx.fillStyle = '#1a1a1a';
-                ctx.fillRect(x - 2, y - 3, 4, 2);
-                ctx.fillRect(x - 3, y, 6, 2);
-                ctx.fillRect(x - 1, y + 2, 2, 2);
-            }
-
-            function drawParticles() {
-                for (let p of goalParticles) {
-                    ctx.globalAlpha = p.life;
-                    ctx.fillStyle = p.color;
-                    ctx.fillRect(p.x - p.size / 2, p.y - p.size / 2, p.size, p.size);
-                }
-                ctx.globalAlpha = 1;
-            }
-
-            function drawGoalFlash() {
-                if (goalFlash > 0) {
-                    ctx.fillStyle = `rgba(255,255,255,${goalFlash * 0.35})`;
-                    ctx.fillRect(0, 0, W, H);
-                }
-            }
-
-            let lastTime = performance.now();
-
-            function gameLoop(timestamp) {
-                const now = timestamp / 1000;
-                let dt = (timestamp - lastTime) / 1000;
-                lastTime = timestamp;
-
-                // 防止大帧跳跃
-                if (dt > 0.1) dt = 0.1;
-
-                // 更新进球闪光
-                if (goalFlash > 0) {
-                    goalFlash -= dt * 1.5;
-                    if (goalFlash < 0) goalFlash = 0;
-                }
-
-                // 更新粒子
-                for (let p of goalParticles) {
-                    p.x += p.vx * dt;
-                    p.y += p.vy * dt;
-                    p.life -= p.decay * dt;
-                }
-                goalParticles = goalParticles.filter(p => p.life > 0);
-
-                // 暂停检测
-                if (paused) {
-                    if (now >= pauseUntil) {
-                        paused = false;
-                        statusDiv.textContent = '⚽ 比赛进行中...';
-                    }
-                }
-
-                // 游戏逻辑
-                if (!paused) {
-                    // AI决策
-                    aiMove(playerRed, ball, W, 0, now);
-                    aiMove(playerBlue, ball, 0, W, now);
-
-                    // 更新球
-                    updateBall(dt);
-                }
-
-                // 绘制
-                drawField();
-                drawBall(ball.x, ball.y);
-                drawPlayer(playerRed.x, playerRed.y, '#f87171', true);
-                drawPlayer(playerBlue.x, playerBlue.y, '#60a5fa', false);
-                drawParticles();
-                drawGoalFlash();
-
-                requestAnimationFrame(gameLoop);
-            }
-
+    function goalScored(team) {
+        if (team === 'red') {
+            scoreRed++;
+            scoreRedEl.textContent = scoreRed;
+            spawnGoalParticles(W - GOAL_DEPTH, ball.y, '#f87171');
+            statusDiv.textContent = '🔴 红队进球！';
+        } else {
+            scoreBlue++;
+            scoreBlueEl.textContent = scoreBlue;
+            spawnGoalParticles(GOAL_DEPTH, ball.y, '#60a5fa');
+            statusDiv.textContent = '🔵 蓝队进球！';
+        }
+        goalFlash = 1.0;
+        setTimeout(() => {
             resetMatch();
-            lastTime = performance.now();
-            requestAnimationFrame(gameLoop);
-        })();
-    </script>
+            statusDiv.textContent = '⚽ 比赛继续...';
+        }, 1800);
+    }
+
+    function spawnGoalParticles(x, y, color) {
+        for (let i = 0; i < 25; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 40 + Math.random() * 120;
+            goalParticles.push({
+                x, y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 1.0,
+                decay: 0.8 + Math.random() * 1.5,
+                size: 2 + Math.random() * 4,
+                color
+            });
+        }
+    }
+
+    function draw() {
+        // 草地
+        ctx.fillStyle = '#2d5a1e';
+        ctx.fillRect(0, 0, W, H);
+        // 纹理
+        ctx.fillStyle = '#3a7228';
+        for (let i = 0; i < 200; i++) {
+            const gx = (i * 137 + 53) % W;
+            const gy = (i * 251 + 89) % H;
+            ctx.fillRect(gx, gy, 2, 2);
+        }
+        // 边线
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1, 1, W-2, H-2);
+        // 中线
+        ctx.beginPath();
+        ctx.setLineDash([6, 6]);
+        ctx.moveTo(W/2, 1);
+        ctx.lineTo(W/2, H-1);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        // 中圈
+        ctx.beginPath();
+        ctx.arc(W/2, H/2, 30, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.stroke();
+        // 球门区域
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+        ctx.strokeRect(0, GOAL_Y_MIN, GOAL_DEPTH+25, GOAL_Y_MAX-GOAL_Y_MIN);
+        ctx.strokeRect(W-GOAL_DEPTH-25, GOAL_Y_MIN, GOAL_DEPTH+25, GOAL_Y_MAX-GOAL_Y_MIN);
+        // 球门
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.fillRect(0, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX-GOAL_Y_MIN);
+        ctx.fillRect(W-GOAL_DEPTH, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX-GOAL_Y_MIN);
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(0, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX-GOAL_Y_MIN);
+        ctx.strokeRect(W-GOAL_DEPTH, GOAL_Y_MIN, GOAL_DEPTH, GOAL_Y_MAX-GOAL_Y_MIN);
+
+        // 绘制球员
+        for (let p of players) {
+            const color = p.team === 'red' ? '#f87171' : '#60a5fa';
+            ctx.fillStyle = color;
+            ctx.fillRect(p.x - PLAYER_SIZE/2, p.y - PLAYER_SIZE/2, PLAYER_SIZE, PLAYER_SIZE);
+            if (p.role === 'goalie') {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(p.x-3, p.y-6, 6, 3);
+            }
+        }
+
+        // 绘制球
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(ball.x - BALL_SIZE/2, ball.y - BALL_SIZE/2, BALL_SIZE, BALL_SIZE);
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(ball.x-2, ball.y-2, 4, 4);
+
+        // 粒子效果
+        for (let p of goalParticles) {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+        }
+        ctx.globalAlpha = 1;
+
+        // 进球闪光
+        if (goalFlash > 0) {
+            ctx.fillStyle = `rgba(255,255,255,${goalFlash * 0.4})`;
+            ctx.fillRect(0, 0, W, H);
+        }
+    }
+
+    function gameLoop(timestamp) {
+        const now = timestamp / 1000;
+        let dt = (timestamp - lastTime) / 1000;
+        lastTime = timestamp;
+        if (dt > 0.1) dt = 0.1;
+
+        // 更新闪光
+        if (goalFlash > 0) {
+            goalFlash -= dt * 1.2;
+            if (goalFlash < 0) goalFlash = 0;
+        }
+        // 更新粒子
+        for (let p of goalParticles) {
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= p.decay * dt;
+        }
+        goalParticles = goalParticles.filter(p => p.life > 0);
+
+        // AI更新
+        aiUpdate(dt, now);
+
+        draw();
+        requestAnimationFrame(gameLoop);
+    }
+
+    resetMatch();
+    lastTime = performance.now();
+    requestAnimationFrame(gameLoop);
+})();
+</script>
 </body>
 </html>

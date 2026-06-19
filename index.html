@@ -160,34 +160,13 @@
             50% { transform: translateY(-60px) rotate(180deg) }
         }
 
-        /* 贪吃蛇游戏样式 */
+        /* 双蛇对决游戏样式 */
         .snake-game-card {
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
-        }
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            color: var(--muted);
-        }
-        .game-score {
-            background: linear-gradient(135deg, var(--green), #22c55e);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 600;
-            font-size: 18px;
-        }
-        .game-status {
-            font-size: 12px;
-            color: var(--muted);
+            gap: 10px;
         }
         .canvas-container {
             position: relative;
@@ -205,6 +184,12 @@
             width: 100%;
             height: 100%;
             image-rendering: pixelated;
+        }
+        .game-status {
+            font-size: 12px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
         }
 
         @media (max-width: 768px) {
@@ -247,13 +232,7 @@
                 <stop offset="88%" stop-color="#f2b96a"/>
                 <stop offset="100%" stop-color="#c06030"/>
             </linearGradient>
-            <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#c06030" stop-opacity=".7"/>
-                <stop offset="30%" stop-color="#7a3590" stop-opacity=".6"/>
-                <stop offset="100%" stop-color="#0d0820" stop-opacity=".95"/>
-            </linearGradient>
             <filter id="glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            <filter id="softglow"><feGaussianBlur stdDeviation="6"/></filter>
         </defs>
         <rect width="1600" height="900" fill="url(#sky)"/>
         <circle cx="1350" cy="95" r="38" fill="#fff5e0" opacity=".95" filter="url(#glow)"/>
@@ -270,7 +249,6 @@
     </nav>
 
     <div class="main-grid">
-        <!-- 左侧信息卡 -->
         <div class="glass clock-card">
             <div class="avatar-clock" id="avatarContainer">
                 <img id="avatarImg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23a78bfa'/%3E%3Cstop offset='100%25' stop-color='%23f4a0c8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23g)'/%3E%3Ctext x='50' y='68' text-anchor='middle' fill='white' font-size='48' font-family='Arial' font-weight='bold'%3EY%3C/text%3E%3C/svg%3E" alt="头像">
@@ -297,22 +275,18 @@
             </div>
         </div>
 
-        <!-- 贪吃蛇游戏卡片 -->
+        <!-- 双蛇自动对决游戏 -->
         <div class="glass snake-game-card">
-            <div class="game-header">
-                <span>🐍 自动贪吃蛇</span>
-                <span class="game-score" id="snakeScore">0</span>
-            </div>
             <div class="canvas-container">
                 <canvas id="snakeCanvas" width="400" height="400"></canvas>
             </div>
-            <div class="game-status" id="snakeStatus">▶️ 游戏中...</div>
+            <div class="game-status" id="snakeStatus">⚔️ 双蛇对决</div>
         </div>
     </div>
 </div>
 
 <script>
-    // --- 现有设置和特效 (不变) ---
+    // --- 现有设置和特效 ---
     const settings = {
         name: localStorage.getItem('userName') || 'Yukecil',
         email: localStorage.getItem('userEmail') || 'hello@example.com',
@@ -425,19 +399,16 @@
     initParticles();
     applySettings();
 
-    // --- 云端配置加载 (不变) ---
+    // --- 云端配置加载 ---
     const BIN_ID = '6a2a15f7da38895dfeaa9630';
     const API_KEY = '$2a$10$hxCwaa9VTSuns2o6OiUV/.gEIZ1wzMQYlNgwWVf1OfXDNY1lJMkGO';
     const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}/latest?t=${Date.now()}`;
 
     async function loadCloudConfig() {
         try {
-            const res = await fetch(BIN_URL, {
-                headers: { 'X-Master-Key': API_KEY }
-            });
+            const res = await fetch(BIN_URL, { headers: { 'X-Master-Key': API_KEY } });
             const json = await res.json();
             const data = json.record;
-
             if (data.title !== undefined) localStorage.setItem('userName', data.title);
             if (data.email !== undefined) localStorage.setItem('userEmail', data.email);
             if (data.telegram !== undefined) localStorage.setItem('userTelegram', data.telegram);
@@ -469,137 +440,178 @@
                     window.hitokotoInterval = null;
                 }
             }
-            console.log('✅ 云端配置已应用');
         } catch (e) {
-            console.error('❌ 云端同步失败', e);
+            console.error('云端同步失败', e);
         }
     }
-
     loadCloudConfig();
 
-    // --- 自动贪吃蛇游戏逻辑 ---
+    // --- 双蛇自动对决游戏逻辑 ---
     (function() {
         const canvas = document.getElementById('snakeCanvas');
         const ctx = canvas.getContext('2d');
-        const scoreSpan = document.getElementById('snakeScore');
-        const statusSpan = document.getElementById('snakeStatus');
+        const statusDiv = document.getElementById('snakeStatus');
 
-        const GRID_SIZE = 20; // 20x20 网格
+        const GRID_SIZE = 20;
         const CELL_SIZE = canvas.width / GRID_SIZE;
 
-        let snake = [
-            {x: 10, y: 10},
-            {x: 9, y: 10},
-            {x: 8, y: 10}
+        // 两条蛇初始数据
+        let snake1 = [
+            {x: 5, y: 10},
+            {x: 4, y: 10},
+            {x: 3, y: 10}
         ];
-        let food = {x: 15, y: 10};
-        let direction = 'right'; // 当前移动方向
-        let gameRunning = true;
-        let gameLoopInterval = null;
-        let speed = 150; // 毫秒
+        let snake2 = [
+            {x: 15, y: 10},
+            {x: 16, y: 10},
+            {x: 17, y: 10}
+        ];
 
-        // 随机生成食物位置（不在蛇身上）
+        let dir1 = 'right';
+        let dir2 = 'left';
+
+        let food = {x: 10, y: 10};
+
+        // 粒子数组
+        let particles = [];
+
+        // 死亡标记与重生计时器
+        let dead1 = false;
+        let dead2 = false;
+        let reviveTimer1 = null;
+        let reviveTimer2 = null;
+
+        // 游戏循环控制
+        let gameInterval = null;
+        const BASE_SPEED = 150;
+
         function randomFood() {
             let newFood;
+            const allSnake = [...snake1, ...snake2];
             do {
                 newFood = {
                     x: Math.floor(Math.random() * GRID_SIZE),
                     y: Math.floor(Math.random() * GRID_SIZE)
                 };
-            } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+            } while (allSnake.some(seg => seg.x === newFood.x && seg.y === newFood.y));
             return newFood;
         }
 
-        // 重置游戏
-        function resetGame() {
-            snake = [
-                {x: 10, y: 10},
-                {x: 9, y: 10},
-                {x: 8, y: 10}
-            ];
-            direction = 'right';
-            food = randomFood();
-            gameRunning = true;
-            updateScore();
-            statusSpan.textContent = '▶️ 游戏中...';
+        // 检查位置是否安全（不撞墙，不在任何蛇身上）
+        function isSafeCell(x, y, ignoreSnake1 = false, ignoreSnake2 = false) {
+            if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return false;
+            if (!ignoreSnake1 && snake1.some(s => s.x === x && s.y === y)) return false;
+            if (!ignoreSnake2 && snake2.some(s => s.x === x && s.y === y)) return false;
+            return true;
         }
 
-        // 更新分数显示
-        function updateScore() {
-            scoreSpan.textContent = snake.length - 3;
-        }
-
-        // 游戏结束
-        function gameOver() {
-            gameRunning = false;
-            statusSpan.textContent = '💀 游戏结束，3秒后自动重启';
-            clearInterval(gameLoopInterval);
-            setTimeout(() => {
-                resetGame();
-                gameLoopInterval = setInterval(gameStep, speed);
-            }, 3000);
-        }
-
-        // 自动选择方向：优先朝向食物，避免撞墙/撞自己
-        function autoDirection() {
+        // 为指定蛇计算AI方向
+        function getAIDirection(snake, food, currentDir, otherSnake) {
             const head = snake[0];
-            const possibleDirections = [];
-
-            // 检查四个方向的安全性
-            const directions = [
+            const opposite = { 'right': 'left', 'left': 'right', 'up': 'down', 'down': 'up' };
+            const dirs = [
                 {name: 'right', dx: 1, dy: 0},
                 {name: 'left', dx: -1, dy: 0},
                 {name: 'down', dx: 0, dy: 1},
                 {name: 'up', dx: 0, dy: -1}
             ];
 
-            // 不能反向
-            const opposite = {
-                'right': 'left',
-                'left': 'right',
-                'up': 'down',
-                'down': 'up'
-            };
-
-            for (let dir of directions) {
-                if (dir.name === opposite[direction]) continue; // 禁止掉头
-
-                const newX = head.x + dir.dx;
-                const newY = head.y + dir.dy;
-                if (newX < 0 || newX >= GRID_SIZE || newY < 0 || newY >= GRID_SIZE) continue; // 撞墙
-                if (snake.some(segment => segment.x === newX && segment.y === newY)) continue; // 撞自己
-
-                possibleDirections.push(dir);
+            let possible = [];
+            for (let d of dirs) {
+                if (d.name === opposite[currentDir]) continue;
+                const nx = head.x + d.dx;
+                const ny = head.y + d.dy;
+                if (!isSafeCell(nx, ny)) continue;
+                // 还要避免撞到对方蛇身
+                if (otherSnake && otherSnake.some(s => s.x === nx && s.y === ny)) continue;
+                possible.push(d);
             }
+            if (possible.length === 0) return currentDir; // 无路可走，只能等死
 
-            if (possibleDirections.length === 0) {
-                // 无路可走，尝试当前方向（可能会死）
-                return direction;
-            }
-
-            // 启发式：选择能更接近食物的方向
-            let bestDir = possibleDirections[0];
-            let minDist = Infinity;
-            for (let dir of possibleDirections) {
-                const newX = head.x + dir.dx;
-                const newY = head.y + dir.dy;
-                const dist = Math.abs(newX - food.x) + Math.abs(newY - food.y);
+            // 选择更接近食物的方向
+            let best = possible[0];
+            let minDist = Math.abs(head.x + best.dx - food.x) + Math.abs(head.y + best.dy - food.y);
+            for (let i = 1; i < possible.length; i++) {
+                const d = possible[i];
+                const dist = Math.abs(head.x + d.dx - food.x) + Math.abs(head.y + d.dy - food.y);
                 if (dist < minDist) {
                     minDist = dist;
-                    bestDir = dir;
+                    best = d;
                 }
             }
-            return bestDir.name;
+            return best.name;
         }
 
-        // 游戏每一步
-        function gameStep() {
-            if (!gameRunning) return;
+        // 生成死亡粒子效果
+        function spawnDeathParticles(snakeBody, color) {
+            for (let seg of snakeBody) {
+                const px = seg.x * CELL_SIZE + CELL_SIZE/2;
+                const py = seg.y * CELL_SIZE + CELL_SIZE/2;
+                for (let i = 0; i < 6; i++) {
+                    particles.push({
+                        x: px,
+                        y: py,
+                        vx: (Math.random() - 0.5) * 3,
+                        vy: (Math.random() - 0.5) * 3,
+                        life: 1.0,
+                        decay: 0.02 + Math.random() * 0.04,
+                        size: 2 + Math.random() * 3,
+                        color: color
+                    });
+                }
+            }
+        }
 
-            // AI 自动决定方向
-            direction = autoDirection();
+        // 重生一条蛇
+        function reviveSnake(snakeNum) {
+            if (snakeNum === 1) {
+                // 找一个安全位置重生
+                let x, y;
+                do {
+                    x = Math.floor(Math.random() * (GRID_SIZE - 2)) + 1;
+                    y = Math.floor(Math.random() * (GRID_SIZE - 2)) + 1;
+                } while (!isSafeCell(x, y, true, false) || !isSafeCell(x-1, y, true, false) || !isSafeCell(x-2, y, true, false));
+                snake1 = [{x, y}, {x: x-1, y}, {x: x-2, y}];
+                dir1 = 'right';
+                dead1 = false;
+                if (reviveTimer1) clearTimeout(reviveTimer1);
+                reviveTimer1 = null;
+                statusDiv.textContent = '⚔️ 双蛇对决';
+            } else {
+                let x, y;
+                do {
+                    x = Math.floor(Math.random() * (GRID_SIZE - 2)) + 1;
+                    y = Math.floor(Math.random() * (GRID_SIZE - 2)) + 1;
+                } while (!isSafeCell(x, y, false, true) || !isSafeCell(x+1, y, false, true) || !isSafeCell(x+2, y, false, true));
+                snake2 = [{x, y}, {x: x+1, y}, {x: x+2, y}];
+                dir2 = 'left';
+                dead2 = false;
+                if (reviveTimer2) clearTimeout(reviveTimer2);
+                reviveTimer2 = null;
+                statusDiv.textContent = '⚔️ 双蛇对决';
+            }
+        }
 
-            // 移动蛇
+        // 处理蛇死亡
+        function killSnake(snakeNum) {
+            if (snakeNum === 1 && !dead1) {
+                dead1 = true;
+                spawnDeathParticles(snake1, '#a78bfa');
+                snake1 = [];
+                statusDiv.textContent = '💀 紫蛇阵亡！';
+                reviveTimer1 = setTimeout(() => reviveSnake(1), 2000);
+            } else if (snakeNum === 2 && !dead2) {
+                dead2 = true;
+                spawnDeathParticles(snake2, '#4ade80');
+                snake2 = [];
+                statusDiv.textContent = '💀 绿蛇阵亡！';
+                reviveTimer2 = setTimeout(() => reviveSnake(2), 2000);
+            }
+        }
+
+        // 移动一条蛇
+        function moveSnake(snake, direction, foodPos, otherSnake, snakeNum) {
+            if (snake.length === 0) return;
             const head = snake[0];
             let newHead;
             switch (direction) {
@@ -607,45 +619,88 @@
                 case 'left': newHead = {x: head.x - 1, y: head.y}; break;
                 case 'down': newHead = {x: head.x, y: head.y + 1}; break;
                 case 'up': newHead = {x: head.x, y: head.y - 1}; break;
-                default: newHead = {x: head.x + 1, y: head.y};
+                default: return;
             }
 
-            // 检查碰撞
+            // 检查撞墙
             if (newHead.x < 0 || newHead.x >= GRID_SIZE || newHead.y < 0 || newHead.y >= GRID_SIZE) {
-                gameOver();
-                return;
-            }
-            if (snake.some(segment => segment.x === newHead.x && segment.y === newHead.y)) {
-                gameOver();
+                killSnake(snakeNum);
                 return;
             }
 
-            // 添加新头部
+            // 检查撞自己
+            if (snake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
+                killSnake(snakeNum);
+                return;
+            }
+
+            // 检查撞对方蛇身（对方存活时）
+            if (otherSnake && otherSnake.length > 0 && otherSnake.some(seg => seg.x === newHead.x && seg.y === newHead.y)) {
+                killSnake(snakeNum);
+                return;
+            }
+
+            // 移动蛇头
             snake.unshift(newHead);
 
-            // 检查是否吃到食物
-            if (newHead.x === food.x && newHead.y === food.y) {
+            // 吃食物检测
+            if (newHead.x === foodPos.x && newHead.y === foodPos.y) {
                 food = randomFood();
-                updateScore();
-                // 动态加速（可选）
-                if (snake.length % 5 === 0 && speed > 60) {
-                    speed -= 10;
-                    clearInterval(gameLoopInterval);
-                    gameLoopInterval = setInterval(gameStep, speed);
+                // 动态加速
+                if ((snake.length + (otherSnake ? otherSnake.length : 0)) % 8 === 0 && BASE_SPEED > 60) {
+                    clearInterval(gameInterval);
+                    const newSpeed = Math.max(60, BASE_SPEED - 10);
+                    gameInterval = setInterval(gameStep, newSpeed);
                 }
             } else {
-                snake.pop(); // 没吃到就移除尾部
+                snake.pop();
+            }
+        }
+
+        // 游戏主步骤
+        function gameStep() {
+            // 更新粒子
+            particles = particles.filter(p => p.life > 0);
+            for (let p of particles) {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= p.decay;
+            }
+
+            // AI决策
+            if (!dead1 && snake1.length > 0) {
+                dir1 = getAIDirection(snake1, food, dir1, snake2);
+            }
+            if (!dead2 && snake2.length > 0) {
+                dir2 = getAIDirection(snake2, food, dir2, snake1);
+            }
+
+            // 移动蛇
+            if (!dead1 && snake1.length > 0) {
+                moveSnake(snake1, dir1, food, snake2, 1);
+            }
+            if (!dead2 && snake2.length > 0) {
+                moveSnake(snake2, dir2, food, snake1, 2);
+            }
+
+            // 额外检测两头相撞（都存活时）
+            if (!dead1 && !dead2 && snake1.length > 0 && snake2.length > 0) {
+                const h1 = snake1[0];
+                const h2 = snake2[0];
+                if (h1.x === h2.x && h1.y === h2.y) {
+                    killSnake(1);
+                    killSnake(2);
+                }
             }
 
             draw();
         }
 
-        // 绘制画布
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 绘制网格线（半透明）
-            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            // 网格线
+            ctx.strokeStyle = 'rgba(255,255,255,0.04)';
             ctx.lineWidth = 0.5;
             for (let i = 0; i <= GRID_SIZE; i++) {
                 ctx.beginPath();
@@ -657,64 +712,103 @@
                 ctx.stroke();
             }
 
-            // 绘制蛇
-            snake.forEach((segment, index) => {
-                const x = segment.x * CELL_SIZE;
-                const y = segment.y * CELL_SIZE;
-                if (index === 0) {
-                    // 蛇头渐变
-                    ctx.fillStyle = '#a78bfa';
-                } else {
-                    // 蛇身渐变
-                    const gradient = ctx.createLinearGradient(x, y, x + CELL_SIZE, y + CELL_SIZE);
-                    gradient.addColorStop(0, '#4ade80');
-                    gradient.addColorStop(1, '#22c55e');
-                    ctx.fillStyle = gradient;
-                }
-                ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
-                // 添加像素风格眼睛（蛇头）
-                if (index === 0) {
-                    ctx.fillStyle = '#ffffff';
-                    if (direction === 'right' || direction === 'left') {
-                        ctx.fillRect(x + (direction==='right'?12:4), y + 4, 4, 4);
-                        ctx.fillRect(x + (direction==='right'?12:4), y + 12, 4, 4);
-                    } else {
-                        ctx.fillRect(x + 4, y + (direction==='down'?12:4), 4, 4);
-                        ctx.fillRect(x + 12, y + (direction==='down'?12:4), 4, 4);
-                    }
-                }
-            });
-
-            // 绘制食物（像素风格方块）
+            // 食物
             const fx = food.x * CELL_SIZE;
             const fy = food.y * CELL_SIZE;
             ctx.fillStyle = '#f87171';
             ctx.fillRect(fx + 2, fy + 2, CELL_SIZE - 4, CELL_SIZE - 4);
-            // 食物上的高光
-            ctx.fillStyle = 'rgba(255,255,255,0.6)';
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
             ctx.fillRect(fx + 4, fy + 4, 4, 4);
+
+            // 绘制蛇1（紫色）
+            if (snake1.length > 0) {
+                snake1.forEach((seg, idx) => {
+                    const x = seg.x * CELL_SIZE;
+                    const y = seg.y * CELL_SIZE;
+                    if (idx === 0) {
+                        ctx.fillStyle = '#a78bfa';
+                    } else {
+                        ctx.fillStyle = '#7c3aed';
+                    }
+                    ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                    if (idx === 0) {
+                        ctx.fillStyle = '#fff';
+                        if (dir1 === 'right' || dir1 === 'left') {
+                            ctx.fillRect(x + (dir1==='right'?12:4), y + 4, 4, 4);
+                            ctx.fillRect(x + (dir1==='right'?12:4), y + 12, 4, 4);
+                        } else {
+                            ctx.fillRect(x + 4, y + (dir1==='down'?12:4), 4, 4);
+                            ctx.fillRect(x + 12, y + (dir1==='down'?12:4), 4, 4);
+                        }
+                    }
+                });
+            }
+
+            // 绘制蛇2（绿色）
+            if (snake2.length > 0) {
+                snake2.forEach((seg, idx) => {
+                    const x = seg.x * CELL_SIZE;
+                    const y = seg.y * CELL_SIZE;
+                    if (idx === 0) {
+                        ctx.fillStyle = '#4ade80';
+                    } else {
+                        ctx.fillStyle = '#16a34a';
+                    }
+                    ctx.fillRect(x + 1, y + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                    if (idx === 0) {
+                        ctx.fillStyle = '#fff';
+                        if (dir2 === 'right' || dir2 === 'left') {
+                            ctx.fillRect(x + (dir2==='right'?12:4), y + 4, 4, 4);
+                            ctx.fillRect(x + (dir2==='right'?12:4), y + 12, 4, 4);
+                        } else {
+                            ctx.fillRect(x + 4, y + (dir2==='down'?12:4), 4, 4);
+                            ctx.fillRect(x + 12, y + (dir2==='down'?12:4), 4, 4);
+                        }
+                    }
+                });
+            }
+
+            // 粒子效果
+            for (let p of particles) {
+                ctx.globalAlpha = p.life;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+            }
+            ctx.globalAlpha = 1;
         }
 
-        // 启动游戏
         function startGame() {
             resetGame();
+            gameInterval = setInterval(gameStep, BASE_SPEED);
+        }
+
+        function resetGame() {
+            snake1 = [{x:5,y:10},{x:4,y:10},{x:3,y:10}];
+            snake2 = [{x:15,y:10},{x:16,y:10},{x:17,y:10}];
+            dir1 = 'right';
+            dir2 = 'left';
+            food = randomFood();
+            particles = [];
+            dead1 = false;
+            dead2 = false;
+            if (reviveTimer1) clearTimeout(reviveTimer1);
+            if (reviveTimer2) clearTimeout(reviveTimer2);
+            statusDiv.textContent = '⚔️ 双蛇对决';
             draw();
-            gameLoopInterval = setInterval(gameStep, speed);
         }
 
         startGame();
 
-        // 窗口失去焦点时降低速度（可选）
         window.addEventListener('blur', () => {
-            if (gameLoopInterval) {
-                clearInterval(gameLoopInterval);
-                gameLoopInterval = setInterval(gameStep, 300);
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = setInterval(gameStep, 300);
             }
         });
         window.addEventListener('focus', () => {
-            if (gameRunning) {
-                clearInterval(gameLoopInterval);
-                gameLoopInterval = setInterval(gameStep, speed);
+            if (gameInterval) {
+                clearInterval(gameInterval);
+                gameInterval = setInterval(gameStep, BASE_SPEED);
             }
         });
     })();
